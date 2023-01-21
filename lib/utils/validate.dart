@@ -23,3 +23,13 @@ String? validatePassword(String? value) {
   }
   return null;
 }
+
+/// 유저이름을 검증하는 함수(공백, 2자 이상)
+String? validateName(String? value) {
+  if (value == null || value!.trim().isEmpty) {
+    return "이름을 입력해야 합니다.";
+  } else if (value.length < 2) {
+    return "이름을 2자 이상 입력하세요.";
+  }
+  return null;
+}
