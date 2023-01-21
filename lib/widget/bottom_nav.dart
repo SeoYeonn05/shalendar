@@ -81,8 +81,8 @@ class BottomNavigation extends StatelessWidget {
           }),
     );
 
-    BottomNavigationBarItem _buildITem(BottomItem bottomItem){
+/*    BottomNavigationBarItem _buildITem(BottomItem bottomItem){
       return navbarItems
-    }
+    }*/
   }
 }
