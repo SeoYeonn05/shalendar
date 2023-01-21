@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart';
 import 'package:dio/dio.dart';
 import '../data/result.dart';
 
@@ -7,6 +8,10 @@ class NetworkHelper {
   static final NetworkHelper _instance = NetworkHelper._internal();
   factory NetworkHelper() => _instance;
   NetworkHelper._internal();
+
+  var logger = Logger(
+    printer: PrettyPrinter()
+  );
 
 /*  Future<Result> get(String action) async {
     var url = Uri.http('192.168.56.1:3000', action);
@@ -34,6 +39,9 @@ class NetworkHelper {
    // 통신이 정상적으로 이루어진 경우 json, 아닐 경우 null
    // 후에 들어온 값이 fail인지는 따로 확인해야 함
    if(response.statusCode == 200){
+     //로그로 들어온 값 확인하기
+     logger.d(response.body);
+
      return response.body;
    } else{
      return null;
