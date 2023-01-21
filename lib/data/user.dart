@@ -19,4 +19,14 @@ class User{
       password: parsedJson['']
     );
   }
+
+  Map<String, dynamic> toJson(){
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data[''] = userId;
+    data[''] = email;
+    data[''] = userName;
+    data[''] = password;
+
+    return data;
+  }
  }
