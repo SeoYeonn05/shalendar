@@ -18,10 +18,16 @@ String? validateEmail(String? value) {
 String? validatePassword(String? value) {
   if (value == null || value!.trim().isEmpty) {
     return "비밀번호를 입력해야 합니다.";
-  } else if (value.length < 8) {
-    return "비밀번호를 8자 이상 입력하세요.";
+  } else {
+    String pattern =
+        r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$';
+    RegExp regExp = new RegExp(pattern);
+    if (!regExp.hasMatch(value)) {
+      return '특수문자, 영문자, 숫자를 포함한 8자 이상';
+    } else {
+      return null;
+    }
   }
-  return null;
 }
 
 /// 유저이름을 검증하는 함수(공백, 2자 이상)
