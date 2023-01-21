@@ -21,6 +21,12 @@ class _LoginState extends State<Login> {
       String password = _passwordController.text;
 
       print('로그인 버튼 눌림 email: $email, password: $password');
+      // 서버통신 부분
+
+      // 로그인 된 페이지로 이동
+      // Navigator.pushAndRemoveUntil(
+      //     context, MaterialPageRoute(builder: (b) => Home()), (route) => false);
+
     }
   }
 
