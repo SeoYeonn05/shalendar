@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
 
+import '../utils/validate.dart';
+
 class Login extends StatefulWidget {
   const Login({super.key});
 
@@ -8,6 +10,25 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  /// 로그인 버튼을 눌렀을 때 동작
+  void loginButton() async {
+    if (_formKey.currentState!.validate()) {
+      String email = _emailController.text;
+      String password = _passwordController.text;
+
+      print('로그인 버튼 눌림 email: $email, password: $password');
+    }
+  }
+
+  /// 회원가입 화면으로 이동
+  void goToRegister() async {
+    print('회원가입 화면으로 이동');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,6 +37,7 @@ class _LoginState extends State<Login> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 80),
           child: Form(
+            key: _formKey,
             child: Column(
               children: [
                 Container(
@@ -24,6 +46,7 @@ class _LoginState extends State<Login> {
                 ),
                 SizedBox(height: 50),
                 TextFormField(
+                  controller: _emailController,
                   decoration: InputDecoration(
                     labelText: 'Email',
                     labelStyle: TextStyle(
@@ -42,14 +65,11 @@ class _LoginState extends State<Login> {
                     fontSize: 17,
                   ),
                   cursorColor: Colors.white,
-                  validator: (String? value) {
-                    if (value == null || value!.trim().isEmpty) {
-                      return "이름을 입력해야 합니다.";
-                    }
-                    return null;
-                  },
+                  validator: validateEmail,
                 ),
                 TextFormField(
+                  controller: _passwordController,
+                  obscureText: true,
                   decoration: InputDecoration(
                     labelText: 'Password',
                     labelStyle: TextStyle(
@@ -68,20 +88,13 @@ class _LoginState extends State<Login> {
                     fontSize: 17,
                   ),
                   cursorColor: Colors.white,
-                  validator: (String? value) {
-                    if (value == null || value!.trim().isEmpty) {
-                      return "비밀번호를 입력해야 합니다.";
-                    }
-                    return null;
-                  },
+                  validator: validatePassword,
                 ),
                 Row(
                   children: [
                     Expanded(child: SizedBox()),
                     TextButton(
-                      onPressed: () {
-                        // 회원 가입 버튼 클릭 했을 경우 동작
-                      },
+                      onPressed: goToRegister,
                       child: Text(
                         '회원가입',
                         style: TextStyle(color: Colors.white),
@@ -91,9 +104,7 @@ class _LoginState extends State<Login> {
                 ),
                 SizedBox(
                   child: OutlinedButton(
-                    onPressed: () {
-                      // 로그인 버튼 클릭 했을 경우 동작
-                    },
+                    onPressed: loginButton,
                     child: Text(
                       '로그인',
                       style: TextStyle(color: Colors.white),
