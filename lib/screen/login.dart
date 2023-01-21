@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-
+import 'package:shalendar/screen/register.dart';
 import '../utils/validate.dart';
 
 class Login extends StatefulWidget {
@@ -27,6 +27,10 @@ class _LoginState extends State<Login> {
   /// 회원가입 화면으로 이동
   void goToRegister() async {
     print('회원가입 화면으로 이동');
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (b) => Register()),
+    );
   }
 
   @override
