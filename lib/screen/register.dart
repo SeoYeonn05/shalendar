@@ -88,7 +88,6 @@ class _RegisterState extends State<Register> {
                 ),
                 TextFormField(
                   controller: _nameController,
-                  obscureText: true,
                   decoration: InputDecoration(
                     labelText: 'name',
                     labelStyle: TextStyle(
