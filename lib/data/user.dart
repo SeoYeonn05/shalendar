@@ -1,32 +1,22 @@
 /// 데이터베이스에서 http로 가져온 json 파일 매핑
-class User{
-  String? userId;
+class User {
   String? email;
-  String? userName;
+  String? name;
   String? password;
 
-  User({
-    this.userId,
-    this.email,
-    this.userName,
-    this.password});
+  User({this.email, this.name, this.password});
 
-  factory User.fromJson(Map<String, dynamic> parsedJson){
+  factory User.fromJson(Map<String, dynamic> parsedJson) {
     return User(
-      userId: parsedJson[''],
-      email: parsedJson[''],
-      userName: parsedJson[''],
-      password: parsedJson['']
-    );
+        email: parsedJson[''], name: parsedJson[''], password: parsedJson['']);
   }
 
-  Map<String, dynamic> toJson(){
+  Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data[''] = userId;
-    data[''] = email;
-    data[''] = userName;
-    data[''] = password;
+    data['email'] = email;
+    data['name'] = name;
+    data['password'] = password;
 
     return data;
   }
- }
+}
