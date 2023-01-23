@@ -1,10 +1,12 @@
 import "package:flutter/material.dart";
 import 'package:shalendar/screen/register.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../data/ResponseUser.dart';
 import '../data/user.dart';
 import '../network/network_helper.dart';
 import '../utils/snackbar.dart';
 import '../utils/validate.dart';
+import 'home.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -21,6 +23,8 @@ class _LoginState extends State<Login> {
 
   /// 로그인 버튼을 눌렀을 때 동작
   void loginButton() async {
+    final prefs = await SharedPreferences.getInstance();
+
     if (_formKey.currentState!.validate()) {
       String email = _emailController.text;
       String password = _passwordController.text;
@@ -41,9 +45,14 @@ class _LoginState extends State<Login> {
           String? token = ResponseUser.fromJson(result).token;
           showSnackBar(context, "로그인 완료"); //스낵바 출력
 
-          // 로그인 된 페이지로 이동
-          // Navigator.pushAndRemoveUntil(
-          //     context, MaterialPageRoute(builder: (b) => Home()), (route) => false);
+          // token이 있을 경우
+          if (token != null) {
+            await prefs.setString('token', token);
+
+            // 로그인 된 페이지로 이동
+            Navigator.pushAndRemoveUntil(context,
+                MaterialPageRoute(builder: (b) => Home()), (route) => false);
+          }
         } else {
           // 로그인 실패 시 오류메세지 출력
           showSnackBar(context, "Email 혹은 password가 틀립니다.");
