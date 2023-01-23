@@ -32,8 +32,10 @@ class _RegisterState extends State<Register> {
       print('회원가입 버튼 눌림 email: $email, password: $password, name: $name');
 
       // User 클래스 생성하여 http 통신 POST
-      var u = new User(email: email, password: password, name: name);
-      var result = await _networkHelper.post('users/register', u.toJson());
+      var newUser =
+          new User(userId: "", email: email, password: password, name: name);
+      var result =
+          await _networkHelper.post('users/register', newUser.toJson());
 
       // json 파싱을 통해서 결과 메세지 추출 정상:ok, 값 오류: 메세지, 통신오류 null
       if (result != null) {
