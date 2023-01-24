@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:dio/dio.dart';
+import '../data/Calendar.dart';
 import '../data/result.dart';
 
 class NetworkHelper {
@@ -14,20 +15,20 @@ class NetworkHelper {
 
   var logger = Logger(printer: PrettyPrinter());
 
-/*  Future<Result> get(String action) async {
-    var url = Uri.http('192.168.56.1:3000', action);
+  Future get(String requestUrl) async {
     try {
-      http.Response response = await http.get(Uri.parse(url));
+      http.Response response = await http.get(Uri.parse(requestUrl));
 
       if (response.statusCode == 200) {
-        return Result(isSuccess: true, response: jsonDecode(response.body));
+        // User.fromJson(json.decode(response.body)) 형태로 사용
+        return Calendar.fromJson(json.decode(response.body));
       } else {
-        return Result(isSuccess: false, response: null);
+        return null;
       }
     } catch (e) {
-      return Result(isSuccess: false, response: null);
+      return null;
     }
-  }*/
+  }
 
   /// http 통신 중 post일 경우 사용
   /// requestUrl: 필요한 url 입력
