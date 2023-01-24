@@ -5,7 +5,9 @@ import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:dio/dio.dart';
 import '../data/Calendar.dart';
+import '../data/ResponseUserGet.dart';
 import '../data/result.dart';
+import '../data/user.dart';
 
 class NetworkHelper {
   final baseUrl = '43.200.165.21';
@@ -27,6 +29,23 @@ class NetworkHelper {
         return null;
       }
     } catch (e) {
+      return null;
+    }
+  }
+
+  Future getUser(String requestUrl, String? token) async {
+    var url = Uri.http(baseUrl, requestUrl);
+    Map<String, String> header = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'token': (token != null) ? token : ""
+    };
+    http.Response response = await http.get(url, headers: header);
+
+    if (response.statusCode == 200) {
+      // logger.d(response.body);
+      return ResponseUserGet.fromJson(jsonDecode(response.body)).user;
+    } else {
       return null;
     }
   }

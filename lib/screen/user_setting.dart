@@ -1,5 +1,12 @@
 import "package:flutter/material.dart";
+import 'package:provider/provider.dart';
+import 'package:shalendar/data/ResponseUserGet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../data/user.dart';
+import '../network/network_helper.dart';
+import '../provider/home_provider.dart';
+import 'login.dart';
 
 class User_Setting extends StatefulWidget {
   const User_Setting({super.key});
@@ -9,9 +16,13 @@ class User_Setting extends StatefulWidget {
 }
 
 class _User_SettingState extends State<User_Setting> {
+  final _networkHelper = NetworkHelper();
+  String? token;
+  String userEmail = "";
+
   /// 뒤로가기 버튼 눌렀을 때
   void backButton() {
-    // 이전 페이지로 이동
+    Navigator.pop(context);
   }
 
   /// 로그아웃 버튼 눌렀을 때
@@ -19,14 +30,32 @@ class _User_SettingState extends State<User_Setting> {
     final prefs = await SharedPreferences.getInstance();
     final success = await prefs.remove('token');
 
-    print("success : $success");
-    // 로그인 화면으로 이동
+    Navigator.pushAndRemoveUntil(
+        context, MaterialPageRoute(builder: (b) => Login()), (route) => false);
   }
 
   /// 회원탈퇴 버튼 눌렀을 때
   void deleteUser() async {
     // 회원탈퇴 다이얼로그 출력 후 확인되면
     // 토큰 삭제, 회원 삭제, 로그인 화면으로 이동
+  }
+
+  // 회원 정보 갱신
+  void getUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token');
+    User result = await _networkHelper.getUser("users", token);
+    if (result.email != null) {
+      userEmail = result.email!;
+    }
+    print(userEmail);
+    setState(() {});
+  }
+
+  @override
+  initState() {
+    super.initState();
+    getUserId();
   }
 
   @override
@@ -88,7 +117,7 @@ class _User_SettingState extends State<User_Setting> {
               child: Row(
                 children: [
                   Text(
-                    "로그인 정보 : z@z.zz",
+                    "로그인 정보 : ${userEmail}",
                     style: TextStyle(color: Colors.white, fontSize: 15),
                   )
                 ],

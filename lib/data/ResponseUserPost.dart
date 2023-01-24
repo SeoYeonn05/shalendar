@@ -1,13 +1,13 @@
-class ResponseUser {
+class ResponseUserPost {
   final String result;
   final int? insertId;
   final String? token;
 
-  ResponseUser(
+  ResponseUserPost(
       {required this.result, required this.insertId, required this.token});
 
-  factory ResponseUser.fromJson(Map<String?, dynamic?> json) {
-    return ResponseUser(
+  factory ResponseUserPost.fromJson(Map<String?, dynamic?> json) {
+    return ResponseUserPost(
       result: json['result'],
       insertId: json['insertId'],
       token: json['token'],
