@@ -59,11 +59,11 @@ class _LoadingState extends State<Loading> {
         width: double.infinity,
         height: double.infinity,
         alignment: Alignment.center,
-        decoration: const BoxDecoration(
+/*        decoration: const BoxDecoration(
           image: DecorationImage(
               image: AssetImage('assets/images/img_loading.png'),
               fit: BoxFit.cover),
-        ),
+        ),*/
         child: Container(
             decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -84,7 +84,7 @@ class _LoadingState extends State<Loading> {
                         decoration: const BoxDecoration(
                             image: DecorationImage(
                                 image:
-                                AssetImage('assets/icons/logo_white.png')),
+                                AssetImage('assets/icons/logo_black.png')),
                             color: Colors.transparent)),
                       ],
                   )

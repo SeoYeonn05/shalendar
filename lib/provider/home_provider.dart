@@ -16,10 +16,8 @@ enum HomeState{
 
 
 class HomeProvider extends ChangeNotifier {
-  late BottomNavigationProvider bottomNavigationProvider;
-  late HomeState state;
+  late HomeState state = HomeState.loading;
   late List<Calendar> calendarList;
-  final _networkHelper = NetworkHelper();
   var logger = Logger(printer: PrettyPrinter());
 
   final _navigatorKeys = {
@@ -43,10 +41,12 @@ class HomeProvider extends ChangeNotifier {
       if (response.statusCode == 200) {
         // User.fromJson(json.decode(response.body)) 형태로 사용
         Calendar.fromJson(json.decode(response.body));
-        return Calendar.fromJson(json.decode(response.body));
+        state = HomeState.completed;
       } else {
+        state = HomeState.empty;
         return null;
       }
+      notifyListeners();
     } catch (e) {
       return null;
     }

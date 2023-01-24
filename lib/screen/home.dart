@@ -23,8 +23,7 @@ class _HomeState extends State<Home> {
   @override
   initState(){
     super.initState();
-
-    _homeProvider.getCalendar();
+    Provider.of<HomeProvider>(context, listen: false).getCalendar();
   }
 
   @override
@@ -32,7 +31,6 @@ class _HomeState extends State<Home> {
     _homeProvider = Provider.of<HomeProvider>(context);
     _bottomNavigationProvider = Provider.of<BottomNavigationProvider>(context);
     state = _homeProvider.state;
-
 
 
     return Scaffold(
