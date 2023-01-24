@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:http/http.dart';
-import 'package:shalendar/data/ResponseUser.dart';
+import 'package:shalendar/data/ResponseUserPost.dart';
 import 'package:shalendar/data/user.dart';
 import 'package:shalendar/screen/home.dart';
 import 'package:shalendar/screen/login.dart';
@@ -32,15 +32,14 @@ class _RegisterState extends State<Register> {
       print('회원가입 버튼 눌림 email: $email, password: $password, name: $name');
 
       // User 클래스 생성하여 http 통신 POST
-      var newUser =
-          new User(userId: "", email: email, password: password, name: name);
+      var newUser = new User(email: email, password: password, name: name);
       var result =
           await _networkHelper.post('users/register', newUser.toJson());
 
       // json 파싱을 통해서 결과 메세지 추출 정상:ok, 값 오류: 메세지, 통신오류 null
       if (result != null) {
         // 결과 메시지 출력
-        String resultMsg = ResponseUser.fromJson(result).result;
+        String resultMsg = ResponseUserPost.fromJson(result).result;
         if (resultMsg == "ok") {
           showSnackBar(context, "회원가입 완료, 가입한 아이디로 로그인해 주세요."); //스낵바 출력
           // 모든 페이지 제거 후 로그인 화면 이동

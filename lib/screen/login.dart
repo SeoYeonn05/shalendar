@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 import 'package:provider/provider.dart';
 import 'package:shalendar/screen/register.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../data/ResponseUser.dart';
+import '../data/ResponseUserPost.dart';
 import '../data/user.dart';
 import '../network/network_helper.dart';
 import '../provider/bottom_nav_provider.dart';
@@ -37,16 +37,15 @@ class _LoginState extends State<Login> {
       // 서버통신 부분
 
       // User 클래스 생성하여 http 통신 POST
-      var newUser =
-          new User(userId: "", email: email, password: password, name: "");
+      var newUser = new User(email: email, password: password, name: "");
       var result = await _networkHelper.post('users/login', newUser.toJson());
 
       // json 파싱을 통해서 결과 메세지 추출 정상:ok, 값 오류: 메세지, 통신오류 null
       if (result != null) {
         // 결과 메시지 출력
-        String resultMsg = ResponseUser.fromJson(result).result;
+        String resultMsg = ResponseUserPost.fromJson(result).result;
         if (resultMsg == "ok") {
-          String? token = ResponseUser.fromJson(result).token;
+          String? token = ResponseUserPost.fromJson(result).token;
           showSnackBar(context, "로그인 완료"); //스낵바 출력
 
           // token이 있을 경우
