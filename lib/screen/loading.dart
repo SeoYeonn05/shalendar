@@ -30,9 +30,10 @@ class _LoadingState extends State<Loading> {
         .checkConnectivity()
         .then((value) => connectivityResult = value);
 
+    getToken();
   }
 
-  void getToken() async{
+  void getToken() async {
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
   }
@@ -40,39 +41,30 @@ class _LoadingState extends State<Loading> {
 // 로딩페이지와 동시에 사용
   @override
   Widget build(BuildContext context) {
-
     Future.delayed(const Duration(milliseconds: 1500), () {
-      if ( token != null) { /// 로그인이 되었는지 확인
+      if (token != null) {
+        /// 로그인이 되었는지 확인
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
                 builder: (context) => MultiProvider(providers: [
-                  ChangeNotifierProvider(
-                      create: (context) => BottomNavigationProvider()),
-                  ChangeNotifierProvider(
-                      create: (context) => HomeProvider()),
-                ], child: BottomNavigation())),
-                (route) => false);
+                      ChangeNotifierProvider(
+                          create: (context) => BottomNavigationProvider()),
+                      ChangeNotifierProvider(
+                          create: (context) => HomeProvider()),
+                    ], child: BottomNavigation())),
+            (route) => false);
       } else {
-        if(connectivityResult == ConnectivityResult.none){
+        if (connectivityResult == ConnectivityResult.none) {
           Fluttertoast.showToast(
               msg: "wifi 상태를 확인해주세요", toastLength: Toast.LENGTH_SHORT);
+        } else {
+          Navigator.pushAndRemoveUntil(context,
+              MaterialPageRoute(builder: (b) => Login()), (route) => false);
         }
       }
     });
 
-    return Container(
-        width: double.infinity,
-        height: double.infinity,
-        alignment: Alignment.center,
-/*        decoration: const BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('assets/images/img_loading.png'),
-              fit: BoxFit.cover),
-        ),*/
-        child: const MaterialApp(
-          home: Login()
-        )
-    );
+    return Container();
   }
 }
