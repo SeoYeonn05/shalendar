@@ -17,7 +17,7 @@ Future<bool> dialog(BuildContext context, int type) async {
         alignment: Alignment.center,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0)),
-        content: Container(
+        /*content: Container(
             margin: const EdgeInsets.only(top: 20),
             child: Text.rich(
               TextSpan(
@@ -39,7 +39,7 @@ Future<bool> dialog(BuildContext context, int type) async {
                     )
                   ]),
               textAlign: TextAlign.center,
-            )),
+            )),*/
         actions: <Widget>[
           SizedBox(
               width: MediaQuery.of(context).size.width,
@@ -67,7 +67,6 @@ Future<bool> dialog(BuildContext context, int type) async {
                           ),
                         ),
                         onTap: () {
-
                           Navigator.pop(context, false);
                         },
                       )),
@@ -92,7 +91,11 @@ Future<bool> dialog(BuildContext context, int type) async {
                           ),
                         ),
                         onTap: () {
+                          if (type == 1) {
 
+                          } else {
+
+                          }
                           Navigator.pop(context, true);
                           Navigator.pop(context, true);
                         },

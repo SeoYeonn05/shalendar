@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shalendar/provider/loading_provider.dart';
 import 'package:shalendar/screen/home.dart';
 import 'package:shalendar/screen/loading.dart';
 import 'package:shalendar/screen/login.dart';
