@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:shared_preferences/shared_preferences.dart';
 
 class User_Setting extends StatefulWidget {
   const User_Setting({super.key});
@@ -9,13 +10,24 @@ class User_Setting extends StatefulWidget {
 
 class _User_SettingState extends State<User_Setting> {
   /// 뒤로가기 버튼 눌렀을 때
-  void backButton() {}
+  void backButton() {
+    // 이전 페이지로 이동
+  }
 
   /// 로그아웃 버튼 눌렀을 때
-  void logout() {}
+  void logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    final success = await prefs.remove('token');
+
+    print("success : $success");
+    // 로그인 화면으로 이동
+  }
 
   /// 회원탈퇴 버튼 눌렀을 때
-  void deleteUser() {}
+  void deleteUser() async {
+    // 회원탈퇴 다이얼로그 출력 후 확인되면
+    // 토큰 삭제, 회원 삭제, 로그인 화면으로 이동
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
@@ -14,20 +15,21 @@ class NetworkHelper {
 
   var logger = Logger(printer: PrettyPrinter());
 
-/*  Future<Result> get(String action) async {
-    var url = Uri.http('192.168.56.1:3000', action);
-    try {
-      http.Response response = await http.get(Uri.parse(url));
+  Map<String, String> createHeader(String? token) {
+    final Map<String, String> header = <String, String>{};
+    header['Content-Type'] = 'application/json';
+    header['Accept'] = 'application/json';
+    header['token'] = (token != null) ? token : "";
+    return header;
+  }
 
-      if (response.statusCode == 200) {
-        return Result(isSuccess: true, response: jsonDecode(response.body));
-      } else {
-        return Result(isSuccess: false, response: null);
-      }
-    } catch (e) {
-      return Result(isSuccess: false, response: null);
-    }
-  }*/
+  Future<http.Response> get(String requestUrl, {String? token = null}) async {
+    var url = Uri.http(baseUrl, requestUrl);
+    var response = await http.get(url, headers: createHeader(token));
+    logger.d(response.body);
+
+    return response;
+  }
 
   /// http 통신 중 post일 경우 사용
   /// requestUrl: 필요한 url 입력
