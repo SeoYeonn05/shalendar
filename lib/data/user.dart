@@ -19,7 +19,7 @@ class User {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['user_Id'] = userId;
     data['email'] = email;
-    data['user_name'] = name;
+    data['name'] = name;
     data['password'] = password;
 
     return data;
