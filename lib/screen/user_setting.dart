@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:provider/provider.dart';
 import 'package:shalendar/data/ResponseUserGet.dart';
+import 'package:shalendar/utils/snackbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/user.dart';
@@ -38,6 +39,15 @@ class _User_SettingState extends State<User_Setting> {
   void deleteUser() async {
     // 회원탈퇴 다이얼로그 출력 후 확인되면
     // 토큰 삭제, 회원 삭제, 로그인 화면으로 이동
+    final prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token');
+    var result = await _networkHelper.deleteUser("users", token);
+
+    if (result == "ok") {
+      showSnackBar(context, "회원 탈퇴가 완료되었습니다.");
+      Navigator.pushAndRemoveUntil(context,
+          MaterialPageRoute(builder: (b) => Login()), (route) => false);
+    }
   }
 
   // 회원 정보 갱신
