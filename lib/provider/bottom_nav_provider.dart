@@ -28,13 +28,15 @@ List<BottomNavigationBarItem> navbarItems = [
 ];
 
 class BottomNavigationProvider extends ChangeNotifier {
-  late final BottomItem _currentItem;
+  //final BottomItem _currentItem = BottomItem.calendar;
+  late int _currentItem = 0;
   late final ValueChanged<BottomItem> onSelectTab;
-  get currentItem => _currentItem;
+  int get currentItem => _currentItem;
 
   // page 업데이트
   setCurrentPage(int index) {
-    BottomItem.values[index];
+    //BottomItem.values[index];
+    _currentItem = index;
     notifyListeners();
   }
 }

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:dio/dio.dart';
+import '../data/Calendar.dart';
 import '../data/result.dart';
 
 class NetworkHelper {
@@ -15,20 +16,19 @@ class NetworkHelper {
 
   var logger = Logger(printer: PrettyPrinter());
 
-  Map<String, String> createHeader(String? token) {
-    final Map<String, String> header = <String, String>{};
-    header['Content-Type'] = 'application/json';
-    header['Accept'] = 'application/json';
-    header['token'] = (token != null) ? token : "";
-    return header;
-  }
+  Future get(String requestUrl) async {
+    try {
+      http.Response response = await http.get(Uri.parse(requestUrl));
 
-  Future<http.Response> get(String requestUrl, {String? token = null}) async {
-    var url = Uri.http(baseUrl, requestUrl);
-    var response = await http.get(url, headers: createHeader(token));
-    logger.d(response.body);
-
-    return response;
+      if (response.statusCode == 200) {
+        // User.fromJson(json.decode(response.body)) 형태로 사용
+        return Calendar.fromJson(json.decode(response.body));
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
   }
 
   /// http 통신 중 post일 경우 사용

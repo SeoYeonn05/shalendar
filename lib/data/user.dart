@@ -9,15 +9,15 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> parsedJson) {
     return User(
-        userId: parsedJson[''],
-        email: parsedJson[''],
-        name: parsedJson[''],
-        password: parsedJson['']);
+        userId: parsedJson['user_id'],
+        email: parsedJson['email'],
+        name: parsedJson['user_name'],
+        password: parsedJson['password']);
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['userId'] = userId;
+    data['user_Id'] = userId;
     data['email'] = email;
     data['name'] = name;
     data['password'] = password;

@@ -1,11 +1,15 @@
 import "package:flutter/material.dart";
+import 'package:provider/provider.dart';
 import 'package:shalendar/screen/register.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../data/ResponseUser.dart';
 import '../data/user.dart';
 import '../network/network_helper.dart';
+import '../provider/bottom_nav_provider.dart';
+import '../provider/home_provider.dart';
 import '../utils/snackbar.dart';
 import '../utils/validate.dart';
+import '../widget/bottom_nav.dart';
 import 'home.dart';
 
 class Login extends StatefulWidget {
@@ -50,8 +54,16 @@ class _LoginState extends State<Login> {
             await prefs.setString('token', token);
 
             // 로그인 된 페이지로 이동
-            Navigator.pushAndRemoveUntil(context,
-                MaterialPageRoute(builder: (b) => Home()), (route) => false);
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MultiProvider(providers: [
+                          ChangeNotifierProvider(
+                              create: (context) => BottomNavigationProvider()),
+                          ChangeNotifierProvider(
+                              create: (context) => HomeProvider()),
+                        ], child: BottomNavigation())),
+                (route) => false);
           }
         } else {
           // 로그인 실패 시 오류메세지 출력
