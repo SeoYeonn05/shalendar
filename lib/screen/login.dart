@@ -81,14 +81,14 @@ class _LoginState extends State<Login> {
     print('회원가입 화면으로 이동');
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (b) => Register()),
+      MaterialPageRoute(builder: (b) => const Register()),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xff3E3E3E),
+      backgroundColor: const Color(0xff3E3E3E),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 80),
@@ -97,13 +97,13 @@ class _LoginState extends State<Login> {
             child: Column(
               children: [
                 Container(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                   child: Image.asset('assets/icons/logo_white.png'),
-                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                 ),
-                SizedBox(height: 50),
+                const SizedBox(height: 50),
                 TextFormField(
                   controller: _emailController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Email',
                     labelStyle: TextStyle(
                       fontSize: 15,
@@ -116,7 +116,7 @@ class _LoginState extends State<Login> {
                       borderSide: BorderSide(color: Colors.white),
                     ),
                   ),
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 17,
                   ),
@@ -126,7 +126,7 @@ class _LoginState extends State<Login> {
                 TextFormField(
                   controller: _passwordController,
                   obscureText: true,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Password',
                     labelStyle: TextStyle(
                       fontSize: 15,
@@ -139,7 +139,7 @@ class _LoginState extends State<Login> {
                       borderSide: BorderSide(color: Colors.white),
                     ),
                   ),
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 17,
                   ),
@@ -148,10 +148,10 @@ class _LoginState extends State<Login> {
                 ),
                 Row(
                   children: [
-                    Expanded(child: SizedBox()),
+                    const Expanded(child: SizedBox()),
                     TextButton(
                       onPressed: goToRegister,
-                      child: Text(
+                      child: const Text(
                         '회원가입',
                         style: TextStyle(color: Colors.white),
                       ),
@@ -159,17 +159,17 @@ class _LoginState extends State<Login> {
                   ],
                 ),
                 SizedBox(
+                  width: double.infinity,
                   child: OutlinedButton(
                     onPressed: loginButton,
-                    child: Text(
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(width: 1.3, color: Colors.white),
+                    ),
+                    child: const Text(
                       '로그인',
                       style: TextStyle(color: Colors.white),
                     ),
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(width: 1.3, color: Colors.white),
-                    ),
                   ),
-                  width: double.infinity,
                 )
               ],
             ),

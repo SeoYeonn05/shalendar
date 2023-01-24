@@ -41,7 +41,7 @@ class _LoadingState extends State<Loading> {
 // 로딩페이지와 동시에 사용
   @override
   Widget build(BuildContext context) {
-    Future.delayed(const Duration(milliseconds: 1500), () {
+    Future.delayed(const Duration(milliseconds: 1000), () {
       if (token != null) {
         /// 로그인이 되었는지 확인
         Navigator.pushAndRemoveUntil(
