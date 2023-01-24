@@ -28,19 +28,29 @@ class BottomNavigation extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         shadowColor: const Color.fromRGBO(255, 255, 255, 0.5),
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xff3E3E3E),
         title: Container(
             width: MediaQuery.of(context).size.width,
             child: Image.asset(
               'assets/icons/logo_black.png',
-              height: 25,
+              height: 50,
             )),
         elevation: 10,
+        actions: <Widget> [
+          IconButton(
+              icon: const Icon(
+                  Icons.settings,
+                color: Colors.white,
+              ),
+            onPressed: () => {}
+            ,
+          )
+        ]
       ),
       body: SafeArea(
         child: [
-          Home(),
-          Todo()
+          const Home(),
+          const Todo()
         ].elementAt(_bottomNavigationProvider.currentItem),
       ),
       bottomNavigationBar: BottomNavigationBar(
