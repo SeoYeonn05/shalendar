@@ -32,7 +32,7 @@ class BottomNavigation extends StatelessWidget {
         title: Container(
             width: MediaQuery.of(context).size.width,
             child: Image.asset(
-              'assets/icons/logo_black.png',
+              'assets/icons/logo_white.png',
               height: 50,
             )),
         elevation: 10,
