@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:shalendar/controller/user_controller.dart';
+import 'package:shalendar/theme/color.dart';
 
-import '../data/Calendar.dart';
+import '../data/calendar.dart';
 import '../dialog/dialog.dart';
 import '../provider/bottom_nav_provider.dart';
 import '../provider/home_provider.dart';
@@ -19,19 +22,20 @@ class _HomeState extends State<Home> {
   late BottomNavigationProvider _bottomNavigationProvider;
   late HomeProvider _homeProvider;
   late HomeState state;
+  late UserController userController;
 
   @override
-  initState(){
+  initState() {
     super.initState();
     Provider.of<HomeProvider>(context, listen: false).getCalendar();
+    userController = Get.put(UserController());
   }
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     _homeProvider = Provider.of<HomeProvider>(context);
     _bottomNavigationProvider = Provider.of<BottomNavigationProvider>(context);
     state = _homeProvider.state;
-
 
     return Scaffold(
         floatingActionButton: floatingButtons(),
@@ -52,28 +56,32 @@ class _HomeState extends State<Home> {
       return messageWidget("캘린더가 존재하지 않습니다");
     } else {
       final calendarList = _homeProvider.calendarList;
-      return Expanded(
-          child: GridView.builder(
-              scrollDirection: Axis.vertical,
-              itemCount: calendarList.length,
-              itemBuilder: (BuildContext context, index) =>
-                  listCard(calendarList[index]),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 4 / 3,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10)));
+      if (calendarList != null) {
+        return Expanded(
+            child: GridView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: calendarList.length,
+                itemBuilder: (BuildContext context, index) =>
+                    listCard(calendarList[index]),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 4 / 3,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10)));
+      } else {
+        return Container();
+      }
     }
   }
 
   Widget messageWidget(String message) => Container(
-    height: 100,
-    alignment: Alignment.center,
-    child: Text(
-      message,
-      style: const TextStyle(fontSize: 30),
-    ),
-  );
+        height: 100,
+        alignment: Alignment.center,
+        child: Text(
+          message,
+          style: const TextStyle(fontSize: 30),
+        ),
+      );
 
   Widget listCard(Calendar calendar) => Container(
       child: Card(
@@ -85,6 +93,7 @@ class _HomeState extends State<Home> {
           child: InkWell(
               onTap: () {
                 // 네비게이터로 이동
+                print('clicked ${calendar.calendarName}');
               },
               child: Stack(fit: StackFit.expand, children: <Widget>[
 /*                Image.asset(
@@ -95,11 +104,12 @@ class _HomeState extends State<Home> {
                 Container(
                     alignment: Alignment.bottomRight,
                     padding: EdgeInsets.all(7),
+                    color: ColorStyles.themeYellow,
                     child: Text("${calendar.calendarName!}  ",
                         style: const TextStyle(
                             fontFamily: 'Pretendard',
                             fontSize: 16,
-                            color: Colors.white,
+                            color: Colors.black,
                             fontWeight: FontWeight.w600))),
               ]))));
 
