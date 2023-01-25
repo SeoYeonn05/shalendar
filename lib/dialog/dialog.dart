@@ -1,17 +1,57 @@
 import 'package:flutter/material.dart';
 
-Future<bool> dialog(BuildContext context, int type) async {
-  return (type == 1) ? addCalendarDialog(context) : joinCalendarDialog(context);
+import '../data/ResponseUserPost.dart';
+import '../network/network_helper.dart';
+import '../theme/color.dart';
+import '../utils/snackbar.dart';
+
+void dialog(BuildContext context, int type) async {
+  (type == 1) ? addCalendarDialog(context) : joinCalendarDialog(context);
 }
 
+// 기본값 themeYellow
+String? color = "themeYellow";
+
 // 캘린더 추가 다이얼로그에서 ok 클릭 시
-void addCalendar() {}
+void addCalendar(BuildContext context, String? name) async {
+  final _networkHelper = NetworkHelper();
+
+  if (name == null || name!.trim().isEmpty) {
+    showSnackBar(context, "캘린더 이름을 입력하세요.");
+    return;
+  }
+  print("캘린더 생성 name : $name, color : $color");
+  ResponseUserPost result = await _networkHelper.addCalendar("calendar", name);
+  if (result.result == "ok") {
+    showSnackBar(context, "캘린더 생성 완료.");
+    // 로컬에 테마 저장
+  } else {
+    showSnackBar(context, "캘린더 생성 실패.");
+  }
+}
 
 // 캘린더 참가 다이얼로그에서 ok 클릭 시
-void joinCalendar() {}
+void joinCalendar(BuildContext context, String? code) async {
+  final _networkHelper = NetworkHelper();
 
-Future<bool> addCalendarDialog(BuildContext context) async {
-  return await showDialog(
+  if (code == null || code!.trim().isEmpty) {
+    showSnackBar(context, "참가 코드를 입력하세요.");
+    return;
+  }
+  print("캘린더 참가 code : $code, color : $color");
+  ResponseUserPost result = await _networkHelper.joinCalendar(code);
+  if (result.result == "ok") {
+    showSnackBar(context, "캘린더 참가 완료.");
+    // 로컬에 테마 저장
+  } else {
+    showSnackBar(context, result.result);
+  }
+}
+
+void addCalendarDialog(BuildContext context) async {
+  final _textController = TextEditingController();
+
+  await showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
@@ -28,7 +68,7 @@ Future<bool> addCalendarDialog(BuildContext context) async {
                   width: double.infinity,
                 ),
                 TextField(
-                  // controller: _textController,
+                  controller: _textController,
                   keyboardType: TextInputType.multiline,
                   maxLines: 1,
                   style: const TextStyle(
@@ -80,6 +120,7 @@ Future<bool> addCalendarDialog(BuildContext context) async {
                   SizedBox(width: 30),
                   TextButton(
                     onPressed: () {
+                      addCalendar(context, _textController.text);
                       Navigator.pop(context, 'OK');
                     },
                     child: Text(
@@ -98,31 +139,99 @@ Future<bool> addCalendarDialog(BuildContext context) async {
       });
 }
 
-Future<bool> joinCalendarDialog(BuildContext context) async {
-  return await showDialog(
+void joinCalendarDialog(BuildContext context) async {
+  final _textController = TextEditingController();
+
+  await showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('참가 코드 입력'),
-          content: Text('정말 삭제하시겠습니까'),
+          content: Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  child: Text(
+                    "참가코드 입력",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  width: double.infinity,
+                ),
+                TextField(
+                  controller: _textController,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 1,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                  ),
+                  decoration: InputDecoration(
+                    labelStyle: TextStyle(
+                      fontSize: 15,
+                      color: Colors.white,
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 15),
+                SizedBox(
+                  child: Text(
+                    "테마 설정",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  width: double.infinity,
+                ),
+                SizedBox(height: 15),
+                ThemeButton(),
+              ],
+            ),
+          ),
+          backgroundColor: Color(0xff3E3E3E),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, 'Cancel'),
-              child: Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context, 'OK');
-              },
-              child: Text('OK'),
-            ),
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'Cancel'),
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(
+                        color: Colors.white,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 30),
+                  TextButton(
+                    onPressed: () {
+                      joinCalendar(context, _textController.text);
+                      Navigator.pop(context, 'OK');
+                    },
+                    child: Text(
+                      'OK',
+                      style: TextStyle(
+                        color: Colors.white,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
           ],
         );
       });
 }
 
 class ThemeButton extends StatelessWidget {
-  const ThemeButton({super.key});
+  ThemeButton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -135,10 +244,12 @@ class ThemeButton extends StatelessWidget {
             height: 28,
             width: 28,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                color = "themeYellow";
+              },
               child: null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xffFFD6D6),
+                backgroundColor: ColorStyles.themeYellow,
               ),
             ),
           ),
@@ -149,10 +260,12 @@ class ThemeButton extends StatelessWidget {
             height: 28,
             width: 28,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                color = "themeRed";
+              },
               child: null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xffF5FFBB),
+                backgroundColor: ColorStyles.themeRed,
               ),
             ),
           ),
@@ -163,10 +276,12 @@ class ThemeButton extends StatelessWidget {
             height: 28,
             width: 28,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                color = "themePink";
+              },
               child: null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xffEAC7FF),
+                backgroundColor: ColorStyles.themePink,
               ),
             ),
           ),
@@ -177,10 +292,12 @@ class ThemeButton extends StatelessWidget {
             height: 28,
             width: 28,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                color = "themeOrange";
+              },
               child: null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xffC1F4FF),
+                backgroundColor: ColorStyles.themeOrange,
               ),
             ),
           ),
@@ -191,10 +308,12 @@ class ThemeButton extends StatelessWidget {
             height: 28,
             width: 28,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                color = "themeGreen";
+              },
               child: null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xffBBFFCA),
+                backgroundColor: ColorStyles.themeGreen,
               ),
             ),
           ),
@@ -205,10 +324,12 @@ class ThemeButton extends StatelessWidget {
             height: 28,
             width: 28,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                color = "themeBlue";
+              },
               child: null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xffFFDDAB),
+                backgroundColor: ColorStyles.themeBlue,
               ),
             ),
           ),
@@ -219,10 +340,12 @@ class ThemeButton extends StatelessWidget {
             height: 28,
             width: 28,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                color = "themeBlack";
+              },
               child: null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xffB1B1B1),
+                backgroundColor: ColorStyles.themeBlack,
               ),
             ),
           ),
