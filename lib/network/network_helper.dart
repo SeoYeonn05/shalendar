@@ -50,4 +50,23 @@ class NetworkHelper {
       return null;
     }
   }
+
+  Future postWithHeaders(
+      String requestUrl, Map<String, String> header, Object obj) async {
+    var url = Uri.http(baseUrl, requestUrl);
+    var response = await http.post(url, headers: header, body: obj);
+
+    // 통신이 정상적으로 이루어진 경우 json, 아닐 경우 null
+    // 후에 들어온 값이 fail인지는 따로 확인해야 함
+    // 400인 경우 오류메시지 출력을 위해 json 넘김
+    if (response.statusCode == 200 || response.statusCode == 400) {
+      //로그로 들어온 값 확인하기
+      logger.d(response.body);
+
+      return jsonDecode(response.body);
+    } else {
+      print("response.statusCode: ${response.statusCode}");
+      return null;
+    }
+  }
 }

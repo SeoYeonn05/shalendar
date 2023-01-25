@@ -55,7 +55,6 @@ class _CalendarState extends State<Calendar> {
 
             //Day Changed
             onDaySelected: (DateTime selectDay, DateTime focusDay) {
-
               setState(() {
                 selectedDay = selectDay;
                 focusedDay = focusDay;
@@ -109,7 +108,7 @@ class _CalendarState extends State<Calendar> {
           ),
         ],
       ),
-      
+
       // 달력 날짜 클릭시 그 날짜의 todo 리스트 가는 대신 그 날짜의 일정 add
       floatingActionButton: FloatingActionButton(
         onPressed: () => showDialog(
@@ -128,7 +127,6 @@ class _CalendarState extends State<Calendar> {
                 child: Text("Ok"),
                 onPressed: () {
                   if (_eventController.text.isEmpty) {
-
                   } else {
                     if (selectedEvents[selectedDay] != null) {
                       selectedEvents[selectedDay]?.add(
@@ -139,18 +137,16 @@ class _CalendarState extends State<Calendar> {
                         Event(title: _eventController.text)
                       ];
                     }
-
                   }
                   Navigator.pop(context);
                   _eventController.clear();
-                  setState((){});
+                  setState(() {});
                   return;
                 },
               ),
             ],
           ),
         ),
-        
         child: const Icon(Icons.add),
       ),
     );

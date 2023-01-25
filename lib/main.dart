@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       // 우측 상단 디버그 표시 제거
       create: (context) => LoadingProvider(),
-      child: const MaterialApp(home: Home());
+      child: const MaterialApp(home: Home())
     );
   }
 }
