@@ -53,7 +53,7 @@ class ChangeTodoDialog extends StatelessWidget {
               Map<String, dynamic> body = <String, dynamic>{};
               body['title'] = changeTodoController.text;
               // request url
-              var url = "calendar/$todoId/todo";
+              var url = "todo/$todoId";
               // request headers
               Map<String, String> headers = <String, String>{};
               String? token = await userController.getToken() as String;
