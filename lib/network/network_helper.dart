@@ -1,9 +1,16 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:dio/dio.dart';
+import '../controller/user_controller.dart';
+import '../data/Calendar.dart';
+import '../data/ResponseUserGet.dart';
+import '../data/ResponseUserPost.dart';
 import '../data/result.dart';
+import '../data/user.dart';
 
 class NetworkHelper {
   final baseUrl = '43.200.165.21';
@@ -11,23 +18,62 @@ class NetworkHelper {
   static final NetworkHelper _instance = NetworkHelper._internal();
   factory NetworkHelper() => _instance;
   NetworkHelper._internal();
+  final userController = Get.put(UserController());
 
   var logger = Logger(printer: PrettyPrinter());
 
-/*  Future<Result> get(String action) async {
-    var url = Uri.http('192.168.56.1:3000', action);
+  Future get(String requestUrl) async {
     try {
-      http.Response response = await http.get(Uri.parse(url));
+      http.Response response = await http.get(Uri.parse(requestUrl));
 
       if (response.statusCode == 200) {
-        return Result(isSuccess: true, response: jsonDecode(response.body));
+        // User.fromJson(json.decode(response.body)) 형태로 사용
+        return Calendar.fromJson(json.decode(response.body));
       } else {
-        return Result(isSuccess: false, response: null);
+        return null;
       }
     } catch (e) {
-      return Result(isSuccess: false, response: null);
+      return null;
     }
-  }*/
+  }
+
+  Future getUser(String requestUrl) async {
+    String? token = await userController.getToken();
+    if (token == null) return null;
+    var url = Uri.http(baseUrl, requestUrl);
+    Map<String, String> header = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'token': token
+    };
+    http.Response response = await http.get(url, headers: header);
+
+    if (response.statusCode == 200) {
+      // logger.d(response.body);
+      return ResponseUserGet.fromJson(jsonDecode(response.body)).user;
+    } else {
+      return null;
+    }
+  }
+
+  Future deleteUser(String requestUrl) async {
+    String? token = await userController.getToken();
+    if (token == null) return null;
+    var url = Uri.http(baseUrl, requestUrl);
+    Map<String, String> header = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'token': token
+    };
+    http.Response response = await http.delete(url, headers: header);
+
+    if (response.statusCode == 200) {
+      logger.d(response.body);
+      return ResponseUserPost.fromJson(jsonDecode(response.body)).result;
+    } else {
+      return null;
+    }
+  }
 
   /// http 통신 중 post일 경우 사용
   /// requestUrl: 필요한 url 입력

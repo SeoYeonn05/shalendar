@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shalendar/screen/user_setting.dart';
 import '../provider/bottom_nav_provider.dart';
+import '../screen/home.dart';
+import '../screen/todo.dart';
 
 class BottomNavigation extends StatelessWidget {
   BottomNavigation({Key? key}) : super(key: key);
@@ -13,26 +16,43 @@ class BottomNavigation extends StatelessWidget {
     const Color unSelected = Color.fromRGBO(204, 210, 223, 1);
     const EdgeInsets itemPadding = EdgeInsets.fromLTRB(0, 8, 0, 5);
 
+    void goUserSetting() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (b) => const User_Setting()),
+      );
+    }
+
+    [
+      const BottomNavigationBarItem(
+          icon: Icon(Icons.calendar_month_outlined), label: '캘린더'),
+      const BottomNavigationBarItem(
+          icon: Icon(Icons.list_alt_outlined), label: 'TODO'),
+    ];
+
     return Scaffold(
       appBar: AppBar(
-        shadowColor: const Color.fromRGBO(255, 255, 255, 0.5),
-        backgroundColor: Colors.white,
-        title: Container(
-            width: MediaQuery.of(context).size.width,
-            child: Image.asset(
-              'assets/icons/logo.png',
-              height: 25,
-            )),
-        elevation: 10,
-      ),
+          shadowColor: const Color.fromRGBO(255, 255, 255, 0.5),
+          backgroundColor: const Color(0xff3E3E3E),
+          title: Container(
+              width: MediaQuery.of(context).size.width,
+              child: Image.asset(
+                'assets/icons/logo_white.png',
+                height: 50,
+              )),
+          elevation: 10,
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(
+                Icons.settings,
+                color: Colors.white,
+              ),
+              onPressed: goUserSetting,
+            )
+          ]),
       body: SafeArea(
-        child: [
-/*          SightsPage(),
-          const RecommendedRoutePage(),
-          const HomePage(),
-          const MapSearchPage(),
-          const RidingPage(),*/
-        ].elementAt(_bottomNavigationProvider.currentItem),
+        child: [const Home(), const Todo()]
+            .elementAt(_bottomNavigationProvider.currentItem),
       ),
       bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
@@ -41,16 +61,12 @@ class BottomNavigation extends StatelessWidget {
             BottomNavigationBarItem(
               icon: Container(
                   padding: itemPadding,
-                  child: Image.asset(
-                    'assets/icons/bottom_nav_place.png',
-                    height: 20,
-                    width: 23,
-                    color: unSelected,
-                  )),
+                  child: Image.asset('assets/icons/ic_calendar.png',
+                      height: 20, width: 23, color: unSelected)),
               activeIcon: Container(
                   padding: itemPadding,
                   child: Image.asset(
-                    'assets/icons/bottom_nav_place.png',
+                    'assets/icons/ic_calendar.png',
                     height: 20,
                     width: 23,
                     color: selected,
@@ -60,12 +76,12 @@ class BottomNavigation extends StatelessWidget {
             BottomNavigationBarItem(
               icon: Container(
                   padding: itemPadding,
-                  child: Image.asset('assets/icons/bottom_nav_route.png',
+                  child: Image.asset('assets/icons/ic_checklist.png',
                       height: 20, width: 20, color: unSelected)),
               activeIcon: Container(
                   padding: itemPadding,
                   child: Image.asset(
-                    'assets/icons/bottom_nav_route.png',
+                    'assets/icons/ic_checklist.png',
                     height: 20,
                     width: 20,
                     color: selected,

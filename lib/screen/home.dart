@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:provider/provider.dart';
 
 import '../data/Calendar.dart';
+import '../dialog/dialog.dart';
 import '../provider/bottom_nav_provider.dart';
 import '../provider/home_provider.dart';
 
@@ -19,12 +21,20 @@ class _HomeState extends State<Home> {
   late HomeState state;
 
   @override
+  initState(){
+    super.initState();
+    Provider.of<HomeProvider>(context, listen: false).getCalendar();
+  }
+
+  @override
   Widget build(BuildContext context){
     _homeProvider = Provider.of<HomeProvider>(context);
     _bottomNavigationProvider = Provider.of<BottomNavigationProvider>(context);
     state = _homeProvider.state;
 
+
     return Scaffold(
+        floatingActionButton: floatingButtons(),
         body: Container(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: Column(
@@ -37,9 +47,9 @@ class _HomeState extends State<Home> {
 
   Widget routeListWidget() {
     if (state == HomeState.loading) {
-      return messageWidget("Loading");
+      return messageWidget("로딩중");
     } else if (state == HomeState.empty) {
-      return messageWidget("Loading");
+      return messageWidget("캘린더가 존재하지 않습니다");
     } else {
       final calendarList = _homeProvider.calendarList;
       return Expanded(
@@ -92,4 +102,41 @@ class _HomeState extends State<Home> {
                             color: Colors.white,
                             fontWeight: FontWeight.w600))),
               ]))));
+
+  Widget? floatingButtons() {
+    return SpeedDial(
+      animatedIcon: AnimatedIcons.menu_close,
+      visible: true,
+      curve: Curves.bounceIn,
+      backgroundColor: const Color.fromARGB(0xFF, 0xFB, 0x95, 0x32),
+      children: [
+        SpeedDialChild(
+            child: const Icon(Icons.settings_sharp, color: Colors.white),
+            label: "생성",
+            labelStyle: const TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+                fontSize: 13.0),
+            backgroundColor: const Color.fromARGB(0xFF, 0xFB, 0x95, 0x32),
+            labelBackgroundColor: const Color.fromARGB(0xFF, 0xFB, 0x95, 0x32),
+            onTap: () {
+              dialog(context, 1);
+            }),
+        SpeedDialChild(
+          child: const Icon(
+            Icons.add_chart_rounded,
+            color: Colors.white,
+          ),
+          label: "참가",
+          backgroundColor: const Color.fromARGB(0xFF, 0xFB, 0x95, 0x32),
+          labelBackgroundColor: const Color.fromARGB(0xFF, 0xFB, 0x95, 0x32),
+          labelStyle: const TextStyle(
+              fontWeight: FontWeight.w500, color: Colors.white, fontSize: 13.0),
+          onTap: () {
+            dialog(context, 2);
+          },
+        )
+      ],
+    );
+  }
 }

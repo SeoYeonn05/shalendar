@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 /// 데이터베이스에서 http로 가져온 json 파일 매핑
 class User {
   String? email;
@@ -8,7 +10,9 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> parsedJson) {
     return User(
-        email: parsedJson[''], name: parsedJson[''], password: parsedJson['']);
+        email: parsedJson['email'],
+        name: parsedJson['user_name'],
+        password: parsedJson['password']);
   }
 
   Map<String, dynamic> toJson() {
