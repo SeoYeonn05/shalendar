@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shalendar/screen/user_setting.dart';
 import '../provider/bottom_nav_provider.dart';
 import '../screen/home.dart';
 import '../screen/todo.dart';
@@ -14,7 +15,6 @@ class BottomNavigation extends StatelessWidget {
     const Color unSelected = Color.fromRGBO(63, 66, 72, 1);
     const Color selected = Color.fromRGBO(204, 210, 223, 1);
     const EdgeInsets itemPadding = EdgeInsets.fromLTRB(0, 8, 0, 5);
-
 
 /*    [
       const BottomNavigationBarItem(
@@ -38,23 +38,24 @@ class BottomNavigation extends StatelessWidget {
                   height: 50,
                 )),
             elevation: 10,
-            actions: <Widget> [
+            actions: <Widget>[
               IconButton(
                 icon: const Icon(
                   Icons.settings,
                   color: Colors.white,
                 ),
-                onPressed: () => {}
-                ,
+                onPressed: () => {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (b) => const User_Setting()),
+                  )
+                },
               )
-            ]
-        ),
+            ]),
       ),
       body: SafeArea(
-        child: [
-          const Home(),
-          const Todo()
-        ].elementAt(_bottomNavigationProvider.currentItem),
+        child: [const Home(), const Todo()]
+            .elementAt(_bottomNavigationProvider.currentItem),
       ),
       bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
@@ -64,9 +65,7 @@ class BottomNavigation extends StatelessWidget {
               icon: Container(
                   padding: itemPadding,
                   child: Image.asset('assets/icons/ic_calendar.png',
-                      height: 20,
-                      width: 23,
-                      color: unSelected)),
+                      height: 20, width: 23, color: unSelected)),
               activeIcon: Container(
                   padding: itemPadding,
                   child: Image.asset(

@@ -134,4 +134,45 @@ class NetworkHelper {
       return null;
     }
   }
+
+  Future addCalendar(String requestUrl, String name) async {
+    String? token = await userController.getToken();
+    if (token == null) return null;
+    var url = Uri.http(baseUrl, requestUrl);
+    Map<String, String> header = {'Accept': 'application/json', 'token': token};
+    http.Response response =
+        await http.post(url, headers: header, body: {'name': name});
+    logger.d(response.body);
+
+    if (response.statusCode == 200) {
+      return ResponseUserPost.fromJson(jsonDecode(response.body));
+    } else {
+      return null;
+    }
+  }
+
+  Future joinCalendar(String code) async {
+    String? token = await userController.getToken();
+    if (token == null) return null;
+
+    String requestUrl = "api/calendar/process-key";
+
+    final queryParameters = {
+      'shareKey': code,
+    };
+
+    var url = Uri.http(baseUrl, requestUrl, queryParameters);
+    print(url);
+    Map<String, String> header = {'Accept': 'application/json', 'token': token};
+    http.Response response = await http.post(url, headers: header);
+    logger.d(response.body);
+
+    if (response.statusCode == 200) {
+      return ResponseUserPost.fromJson(jsonDecode(response.body));
+    } else if (response.statusCode == 500) {
+      return ResponseUserPost.fromJson({'result': '캘린더 참가 코드가 잘못 되었습니다.'});
+    } else {
+      return null;
+    }
+  }
 }
