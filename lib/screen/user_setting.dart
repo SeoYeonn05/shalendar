@@ -41,7 +41,7 @@ class _User_SettingState extends State<User_Setting> {
     // 토큰 삭제, 회원 삭제, 로그인 화면으로 이동
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
-    var result = await _networkHelper.deleteUser("users", token);
+    var result = await _networkHelper.deleteUser("users");
 
     if (result == "ok") {
       showSnackBar(context, "회원 탈퇴가 완료되었습니다.");
@@ -54,7 +54,7 @@ class _User_SettingState extends State<User_Setting> {
   void getUserId() async {
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
-    User result = await _networkHelper.getUser("users", token);
+    User result = await _networkHelper.getUser("users");
     if (result.email != null) {
       userEmail = result.email!;
     }
