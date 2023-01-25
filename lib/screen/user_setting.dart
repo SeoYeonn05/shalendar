@@ -37,7 +37,6 @@ class _User_SettingState extends State<User_Setting> {
 
   /// 회원탈퇴 버튼 눌렀을 때
   void deleteUser() async {
-    // 회원탈퇴 다이얼로그 출력 후 확인되면
     // 토큰 삭제, 회원 삭제, 로그인 화면으로 이동
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
@@ -48,6 +47,64 @@ class _User_SettingState extends State<User_Setting> {
       Navigator.pushAndRemoveUntil(context,
           MaterialPageRoute(builder: (b) => Login()), (route) => false);
     }
+  }
+
+  void askDeleteUser() async {
+    await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              "회원 탈퇴",
+              style: TextStyle(color: Colors.white),
+            ),
+            content: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    child: Text(
+                      "회원 탈퇴를 진행하시겠습니까?",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            backgroundColor: Color(0xff3E3E3E),
+            actions: [
+              Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, 'Cancel'),
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                          color: Colors.white,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 30),
+                    TextButton(
+                      onPressed: deleteUser,
+                      child: Text(
+                        'OK',
+                        style: TextStyle(
+                          color: Colors.white,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          );
+        });
   }
 
   // 회원 정보 갱신
@@ -159,7 +216,7 @@ class _User_SettingState extends State<User_Setting> {
           Container(
             height: 50,
             child: OutlinedButton(
-              onPressed: deleteUser,
+              onPressed: askDeleteUser,
               style: OutlinedButton.styleFrom(
                 side: BorderSide(
                   color: Color(0xff797979),
