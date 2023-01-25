@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 Future<bool> dialog(BuildContext context, int type) async {
   String text;
+  late String textField;
   if (type == 1) {
     text = "캘린더 이름\n";
   } else {
@@ -17,29 +18,32 @@ Future<bool> dialog(BuildContext context, int type) async {
         alignment: Alignment.center,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0)),
-        /*content: Container(
+        content: Container(
             margin: const EdgeInsets.only(top: 20),
-            child: Text.rich(
-              TextSpan(
-                  text: text,
-                  style: const TextStyle(
-                      color: Color.fromARGB(255, 24, 24, 1),
-                      fontFamily: 'Pretendard',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 17),
-                  children: const <TextSpan>[
-                    TextSpan(
-                      text: '(기록이 삭제될 수 있습니다)',
-                      style: TextStyle(
-                          color: Color.fromARGB(150, 24, 24, 1),
-                          fontFamily: 'Pretendard',
-                          height: 1.5,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13),
-                    )
-                  ]),
-              textAlign: TextAlign.center,
-            )),*/
+            child: Column(
+                children: [
+                  Text(
+                    text,
+                    style: const TextStyle(
+                        color: Color.fromARGB(255, 24, 24, 1),
+                        fontFamily: 'Pretendard',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 17),
+                  ),
+                  TextField(
+
+                  ),
+                  const SizedBox(height: 50),
+                  const Text(
+                    "테마 설정",
+                    style: TextStyle(
+                        color: Color.fromARGB(255, 24, 24, 1),
+                        fontFamily: 'Pretendard',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 17),
+                  ),
+                ]),
+            ),
         actions: <Widget>[
           SizedBox(
               width: MediaQuery.of(context).size.width,
