@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import '../controller/user_controller.dart';
 import '../data/ResponseUserPost.dart';
 import '../network/network_helper.dart';
 import '../theme/color.dart';
@@ -14,6 +16,7 @@ String? color = "themeYellow";
 
 // 캘린더 추가 다이얼로그에서 ok 클릭 시
 void addCalendar(BuildContext context, String? name) async {
+  final userController = Get.put(UserController());
   final _networkHelper = NetworkHelper();
 
   if (name == null || name!.trim().isEmpty) {
@@ -25,6 +28,8 @@ void addCalendar(BuildContext context, String? name) async {
   if (result.result == "ok") {
     showSnackBar(context, "캘린더 생성 완료.");
     // 로컬에 테마 저장
+    userController.setTheme(result.insertId!, color);
+    print("setTheme 로컬에 저장 key : ${result.insertId}, value : $color");
   } else {
     showSnackBar(context, "캘린더 생성 실패.");
   }
@@ -32,6 +37,7 @@ void addCalendar(BuildContext context, String? name) async {
 
 // 캘린더 참가 다이얼로그에서 ok 클릭 시
 void joinCalendar(BuildContext context, String? code) async {
+  final userController = Get.put(UserController());
   final _networkHelper = NetworkHelper();
 
   if (code == null || code!.trim().isEmpty) {
@@ -42,7 +48,8 @@ void joinCalendar(BuildContext context, String? code) async {
   ResponseUserPost result = await _networkHelper.joinCalendar(code);
   if (result.result == "ok") {
     showSnackBar(context, "캘린더 참가 완료.");
-    // 로컬에 테마 저장
+    userController.setTheme(result.insertId!, color);
+    print("setTheme 로컬에 저장 key : ${result.insertId}, value : $color");
   } else {
     showSnackBar(context, result.result);
   }
