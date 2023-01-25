@@ -20,7 +20,7 @@ class _todolistState extends State<todolist> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("mytodos"),
+        title: Text("고른 날짜 뜨는곳"),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -70,8 +70,8 @@ class _todolistState extends State<todolist> {
                 ),
                 onPressed: () {
                   setState(() {
-                    //showAlertDialog(index); // 경고창이 오류가 뜸
-                    todos.removeAt(index);
+                    showAlertDialog(index); // 경고창이 오류가 뜸
+                    //todos.removeAt(index);
                   });
                 }),
               )
@@ -96,7 +96,7 @@ class _todolistState extends State<todolist> {
               onPressed: () {
                 Navigator.pop(context, "삭제");
                 todos.removeAt(index);
-                Navigator.pop(context);
+                //Navigator.pop(context);
               },
             ),
             FloatingActionButton(
