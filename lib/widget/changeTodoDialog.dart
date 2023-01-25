@@ -4,6 +4,7 @@ import 'package:shalendar/network/network_helper.dart';
 import 'package:shalendar/controller/user_controller.dart';
 import 'package:shalendar/screen/todo.dart';
 import 'package:get/get.dart';
+import 'package:shalendar/utils/snackbar.dart';
 
 /**
  * 선택한 일정의 title을 수정하는 다이얼로그 위젯
@@ -19,16 +20,7 @@ class ChangeTodoDialog extends StatelessWidget {
   final UserController userController = Get.put(UserController());
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
-        child: Text('test'),
-        onPressed: (() {
-          showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (BuildContext context) {
-                return alertDialog(context);
-              });
-        }));
+    return alertDialog(context);
   }
 
   Widget alertDialog(BuildContext context) {
@@ -70,16 +62,10 @@ class ChangeTodoDialog extends StatelessWidget {
                 // todo 수정하고 수정한 todo로 이동?
                 print('todo 수정 완료');
                 Navigator.of(context).pop();
-                Get.to(Todo());
+                showSnackBar(context, 'todo 삭제 완료');
               } else {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text("에러 발생"),
-                        content: Text("todo 변경에 실패했습니다."),
-                      );
-                    });
+                Navigator.of(context).pop();
+                showSnackBar(context, 'todo 삭제 실패');
               }
             },
             child: Text('ok')),

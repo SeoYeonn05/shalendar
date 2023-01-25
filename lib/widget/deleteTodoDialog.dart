@@ -20,16 +20,7 @@ class DeleteTodoDialog extends StatelessWidget {
   final UserController userController = Get.put(UserController());
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
-        child: Text('test'),
-        onPressed: (() {
-          showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (BuildContext context) {
-                return alertDialog(context);
-              });
-        }));
+    return alertDialog(context);
   }
 
   Widget alertDialog(BuildContext context) {

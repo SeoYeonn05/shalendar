@@ -20,17 +20,7 @@ class AddTodoDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
-        // 다이얼로그를 불러올 테스트 버튼
-        child: Text('test'),
-        onPressed: (() {
-          showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (BuildContext context) {
-                return alertDialog(context);
-              });
-        }));
+    return alertDialog(context);
   }
 
   Widget alertDialog(BuildContext context) {
