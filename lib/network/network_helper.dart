@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:dio/dio.dart';
+import '../controller/user_controller.dart';
 import '../data/Calendar.dart';
 import '../data/ResponseUserGet.dart';
 import '../data/ResponseUserPost.dart';
@@ -16,6 +18,7 @@ class NetworkHelper {
   static final NetworkHelper _instance = NetworkHelper._internal();
   factory NetworkHelper() => _instance;
   NetworkHelper._internal();
+  final userController = Get.put(UserController());
 
   var logger = Logger(printer: PrettyPrinter());
 
@@ -34,12 +37,14 @@ class NetworkHelper {
     }
   }
 
-  Future getUser(String requestUrl, String? token) async {
+  Future getUser(String requestUrl) async {
+    String? token = await userController.getToken();
+    if (token == null) return null;
     var url = Uri.http(baseUrl, requestUrl);
     Map<String, String> header = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'token': (token != null) ? token : ""
+      'token': token
     };
     http.Response response = await http.get(url, headers: header);
 
@@ -51,12 +56,14 @@ class NetworkHelper {
     }
   }
 
-  Future deleteUser(String requestUrl, String? token) async {
+  Future deleteUser(String requestUrl) async {
+    String? token = await userController.getToken();
+    if (token == null) return null;
     var url = Uri.http(baseUrl, requestUrl);
     Map<String, String> header = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'token': (token != null) ? token : ""
+      'token': token
     };
     http.Response response = await http.delete(url, headers: header);
 
