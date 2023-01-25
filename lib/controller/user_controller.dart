@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:shalendar/theme/color.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserController extends GetxController {
@@ -15,15 +16,15 @@ class UserController extends GetxController {
   /// 테마를 로컬에 저장하는 함수
   void setTheme(int calendarId, String? color) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(
-        '$calendarId', (color == null) ? "themeYellow" : color);
+    await prefs.setString('$calendarId',
+        (color == null) ? ColorStyles.themeYellow.value.toString() : color);
   }
 
   /// 앱에 저장된 캘린더 테마를 가져오는 함수
   Future<String> getTheme(int calendarId) async {
     final prefs = await SharedPreferences.getInstance();
     final String? theme = prefs.getString('$calendarId');
-    return (theme != null) ? theme : "themeYellow";
+    return (theme != null) ? theme : ColorStyles.themeYellow.value.toString();
   }
 
   /// 앱에 저장된 캘린더 테마를 삭제하는 함수

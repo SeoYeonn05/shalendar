@@ -252,7 +252,7 @@ class ThemeButton extends StatelessWidget {
             width: 28,
             child: ElevatedButton(
               onPressed: () {
-                color = "themeYellow";
+                color = ColorStyles.themeYellow.value.toString();
               },
               child: null,
               style: ElevatedButton.styleFrom(
@@ -268,7 +268,7 @@ class ThemeButton extends StatelessWidget {
             width: 28,
             child: ElevatedButton(
               onPressed: () {
-                color = "themeRed";
+                color = ColorStyles.themeRed.value.toString();
               },
               child: null,
               style: ElevatedButton.styleFrom(
@@ -284,7 +284,7 @@ class ThemeButton extends StatelessWidget {
             width: 28,
             child: ElevatedButton(
               onPressed: () {
-                color = "themePink";
+                color = ColorStyles.themePink.value.toString();
               },
               child: null,
               style: ElevatedButton.styleFrom(
@@ -300,7 +300,7 @@ class ThemeButton extends StatelessWidget {
             width: 28,
             child: ElevatedButton(
               onPressed: () {
-                color = "themeOrange";
+                color = ColorStyles.themeOrange.value.toString();
               },
               child: null,
               style: ElevatedButton.styleFrom(
@@ -316,7 +316,7 @@ class ThemeButton extends StatelessWidget {
             width: 28,
             child: ElevatedButton(
               onPressed: () {
-                color = "themeGreen";
+                color = ColorStyles.themeGreen.value.toString();
               },
               child: null,
               style: ElevatedButton.styleFrom(
@@ -332,7 +332,7 @@ class ThemeButton extends StatelessWidget {
             width: 28,
             child: ElevatedButton(
               onPressed: () {
-                color = "themeBlue";
+                color = ColorStyles.themeBlue.value.toString();
               },
               child: null,
               style: ElevatedButton.styleFrom(
@@ -348,7 +348,7 @@ class ThemeButton extends StatelessWidget {
             width: 28,
             child: ElevatedButton(
               onPressed: () {
-                color = "themeBlack";
+                color = ColorStyles.themeBlack.value.toString();
               },
               child: null,
               style: ElevatedButton.styleFrom(

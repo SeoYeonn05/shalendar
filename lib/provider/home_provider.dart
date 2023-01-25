@@ -16,6 +16,7 @@ enum HomeState { loading, empty, completed }
 class HomeProvider extends ChangeNotifier {
   late HomeState state = HomeState.loading;
   late List<Calendar>? calendarList;
+  late Map<int, int> themeMap;
   var logger = Logger(printer: PrettyPrinter());
 
   final _navigatorKeys = {
@@ -36,6 +37,7 @@ class HomeProvider extends ChangeNotifier {
     final NetworkHelper networkHelper = NetworkHelper();
     final UserController userController = Get.put(UserController());
     calendarList = [];
+    themeMap = <int, int>{};
     try {
       Map<String, String> headers = <String, String>{};
       headers['token'] = (await userController.getToken())!;
@@ -59,6 +61,8 @@ class HomeProvider extends ChangeNotifier {
               createdAt: DateTime.parse(tmp['created_at']),
               userConnId: tmp['user_conn_id']);
           calendarList?.add(res);
+          themeMap[tmp['calendar_id']] =
+              int.parse(await userController.getTheme(tmp['calendar_id']));
           // themeMap![tmp['calendar_id']] = Color(
           //     int.parse(()));
         }

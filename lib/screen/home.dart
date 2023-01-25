@@ -56,13 +56,14 @@ class _HomeState extends State<Home> {
       return messageWidget("캘린더가 존재하지 않습니다");
     } else {
       final calendarList = _homeProvider.calendarList;
+      final themeMap = _homeProvider.themeMap;
       if (calendarList != null) {
         return Expanded(
             child: GridView.builder(
                 scrollDirection: Axis.vertical,
                 itemCount: calendarList.length,
                 itemBuilder: (BuildContext context, index) =>
-                    listCard(calendarList[index]),
+                    listCard(calendarList[index], themeMap),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     childAspectRatio: 4 / 3,
@@ -83,7 +84,7 @@ class _HomeState extends State<Home> {
         ),
       );
 
-  Widget listCard(Calendar calendar) => Container(
+  Widget listCard(Calendar calendar, Map<int, int> themeMap) => Container(
       child: Card(
           semanticContainer: true,
           clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -104,7 +105,9 @@ class _HomeState extends State<Home> {
                 Container(
                     alignment: Alignment.bottomRight,
                     padding: EdgeInsets.all(7),
-                    color: ColorStyles.themeYellow,
+                    color: Color(
+                        themeMap[int.parse(calendar.calendarId ?? '0')] ??
+                            4294311867),
                     child: Text("${calendar.calendarName!}  ",
                         style: const TextStyle(
                             fontFamily: 'Pretendard',
@@ -112,6 +115,9 @@ class _HomeState extends State<Home> {
                             color: Colors.black,
                             fontWeight: FontWeight.w600))),
               ]))));
+  Color selectColor(Map<int, int> themeColor, int calendarId) {
+    return Color(themeColor[calendarId] ?? 0);
+  }
 
   Widget? floatingButtons() {
     return SpeedDial(
