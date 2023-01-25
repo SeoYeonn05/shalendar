@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:sns_flutter/src/widgets/todolist.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 
@@ -27,10 +26,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
     // TODO: implement initState
     super.initState();
     _selectedDate = _focusedDay;
-
-  
   }
-
 
   List _listOfDayEvents(DateTime dateTime) {
     if (mySelectedEvents[DateFormat('yyyy-MM-dd').format(dateTime)] != null) {
@@ -127,13 +123,11 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Event Calendar Example'),
       ),
-      
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -142,7 +136,6 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
               lastDay: DateTime(2050),
               focusedDay: _focusedDay,
               calendarFormat: _calendarFormat,
-              
               onDaySelected: (selectedDay, focusedDay) {
                 if (!isSameDay(_selectedDate, selectedDay)) {
                   // Call `setState()` when updating the selected day
@@ -171,42 +164,42 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 _focusedDay = focusedDay;
               },
               eventLoader: _listOfDayEvents,
-              
-              calendarStyle:const  CalendarStyle(
+              calendarStyle: const CalendarStyle(
                 /*rowDecoration: BoxDecoration( // 달력 내부 배경색
                   color: Colors.yellow,
                 ),*/
-              isTodayHighlighted: true,
-              selectedDecoration: BoxDecoration( // 누른날짜 색깔
-                color: Colors.blue,
-                shape: BoxShape.circle,
+                isTodayHighlighted: true,
+                selectedDecoration: BoxDecoration(
+                  // 누른날짜 색깔
+                  color: Colors.blue,
+                  shape: BoxShape.circle,
+                ),
+                selectedTextStyle: TextStyle(color: Colors.white), // 누른날 숫자색
+                todayDecoration: BoxDecoration(
+                  // 오늘 날짜 색
+                  color: Color.fromARGB(255, 0, 247, 33),
+                  shape: BoxShape.circle,
+                ),
+                defaultDecoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                ),
+                weekendDecoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                ),
               ),
-              selectedTextStyle: TextStyle(color: Colors.white), // 누른날 숫자색
-              todayDecoration: BoxDecoration(   // 오늘 날짜 색
-                color: Color.fromARGB(255, 0, 247, 33),
-                shape: BoxShape.circle,
-              ),
-              defaultDecoration: BoxDecoration(
-                shape: BoxShape.circle,
-              ),
-              weekendDecoration: BoxDecoration(
-                shape: BoxShape.circle,
+              headerStyle: HeaderStyle(
+                formatButtonVisible: true,
+                titleCentered: true,
+                formatButtonShowsNext: false,
+                formatButtonDecoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                formatButtonTextStyle: TextStyle(
+                  color: Colors.white,
+                ),
               ),
             ),
-            headerStyle: HeaderStyle(
-              formatButtonVisible: true,
-              titleCentered: true,
-              formatButtonShowsNext: false,
-              formatButtonDecoration: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.circular(5.0),
-              ),
-              formatButtonTextStyle: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-            ),
-          
             ..._listOfDayEvents(_selectedDate!).map(
               (myEvents) => ListTile(
                 leading: const Icon(
@@ -226,7 +219,6 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddEventDialog(),
         child: const Icon(Icons.add),
-        
       ),
     );
   }
