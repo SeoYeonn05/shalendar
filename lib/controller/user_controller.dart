@@ -11,4 +11,24 @@ class UserController extends GetxController {
     final String? token = prefs.getString('token');
     return (token != null) ? token : null;
   }
+
+  /// 테마를 로컬에 저장하는 함수
+  void setTheme(int calendarId, String? color) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+        '$calendarId', (color == null) ? "themeYellow" : color);
+  }
+
+  /// 앱에 저장된 캘린더 테마를 가져오는 함수
+  Future<String> getTheme(int calendarId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? theme = prefs.getString('$calendarId');
+    return (theme != null) ? theme : "themeYellow";
+  }
+
+  /// 앱에 저장된 캘린더 테마를 삭제하는 함수
+  void deleteTheme(int calendarId) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('$calendarId');
+  }
 }
