@@ -14,14 +14,13 @@ class Todo {
       this.calendarId,
       this.isComplete});
 
-  factory Todo.fromJson(Map<String, dynamic> parsedJson) {
+  factory Todo.fromJson(Map<String, dynamic> tmp) {
     return Todo(
-      todoId: parsedJson[''],
-      title: parsedJson[''],
-      createdAt: parsedJson[''],
-      calendarId: parsedJson[''],
-      isComplete: parsedJson[''],
-    );
+        todoId: tmp['todo_id'],
+        calendarId: tmp['calendar_id'].toString(),
+        isComplete: tmp['isComplete'],
+        createdAt: DateTime.parse(tmp['created_at']),
+        title: tmp['user_conn_id']);
   }
 
   Map<String, dynamic> toJson() {

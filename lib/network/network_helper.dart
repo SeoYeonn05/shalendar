@@ -22,20 +22,6 @@ class NetworkHelper {
 
   var logger = Logger(printer: PrettyPrinter());
 
-  Future get(String requestUrl) async {
-    try {
-      http.Response response = await http.get(Uri.parse(requestUrl));
-
-      if (response.statusCode == 200) {
-        // User.fromJson(json.decode(response.body)) 형태로 사용
-        return Calendar.fromJson(json.decode(response.body));
-      } else {
-        return null;
-      }
-    } catch (e) {
-      return null;
-    }
-  }
 
   Future getWithHeaders(String requestUrl, Map<String, String> header) async {
     var url = Uri.http(baseUrl, requestUrl);
@@ -194,4 +180,5 @@ class NetworkHelper {
       return null;
     }
   }
+
 }

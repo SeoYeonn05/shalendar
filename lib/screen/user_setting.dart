@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:provider/provider.dart';
 import 'package:shalendar/data/ResponseUserGet.dart';
+import 'package:shalendar/theme/color.dart';
 import 'package:shalendar/utils/snackbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -128,7 +129,7 @@ class _User_SettingState extends State<User_Setting> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xff3E3E3E),
+      backgroundColor: ColorStyles.backgroundColor,
       appBar: AppBar(
         title: Image.asset(
           'assets/icons/logo_white.png',
@@ -136,7 +137,7 @@ class _User_SettingState extends State<User_Setting> {
           height: 38,
         ),
         centerTitle: true,
-        backgroundColor: Color(0xff676767),
+        backgroundColor: ColorStyles.appbarColor,
         leading: IconButton(
             onPressed: backButton,
             icon: Icon(

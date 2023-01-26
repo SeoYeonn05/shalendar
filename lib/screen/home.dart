@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
@@ -25,6 +24,29 @@ class _HomeState extends State<Home> {
   late HomeState state;
   late UserController userController;
 
+  List<Calendar> calList = [
+    Calendar(
+        calendarId: "우왕",
+        calendarName: "이번주 할 일",
+        createdAt: DateTime(2022, 2, 1, 0, 0, 14, 0, 35),
+        userConnId: 1),
+    Calendar(
+        calendarId: "우왕",
+        calendarName: "이번주 할 일",
+        createdAt: DateTime(2022, 2, 1, 0, 0, 14, 0, 35),
+        userConnId: 1),
+    Calendar(
+        calendarId: "우왕",
+        calendarName: "이번주 할 일",
+        createdAt: DateTime(2022, 2, 1, 0, 0, 14, 0, 35),
+        userConnId: 1),
+    Calendar(
+        calendarId: "우왕",
+        calendarName: "이번주 할 일",
+        createdAt: DateTime(2022, 2, 1, 0, 0, 14, 0, 35),
+        userConnId: 1)
+  ];
+
   @override
   initState() {
     super.initState();
@@ -41,10 +63,12 @@ class _HomeState extends State<Home> {
     return Scaffold(
         floatingActionButton: floatingButtons(),
         body: Container(
+            color: ColorStyles.backgroundColor,
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                SizedBox(height: 15),
                 routeListWidget(),
               ],
             )));
@@ -94,7 +118,6 @@ class _HomeState extends State<Home> {
           ),
           child: InkWell(
               onTap: () {
-                // 네비게이터로 이동
                 print('clicked ${calendar.calendarName}');
                 Navigator.push(
                   context,
@@ -114,12 +137,18 @@ class _HomeState extends State<Home> {
                     color: Color(
                         themeMap[int.parse(calendar.calendarId ?? '0')] ??
                             4294311867),
-                    child: Text("${calendar.calendarName!}  ",
-                        style: const TextStyle(
-                            fontFamily: 'Pretendard',
-                            fontSize: 16,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w600))),
+                    child: Column(
+                      children: [
+                        Text("${calendar.calendarName!}  ",
+                            style: const TextStyle(
+                                fontFamily: 'Pretendard',
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600)),
+                        Text("achieveRate%"),
+                        Text("정서연 외 11명")
+                      ],
+                    )),
               ]))));
   Color selectColor(Map<int, int> themeColor, int calendarId) {
     return Color(themeColor[calendarId] ?? 0);
@@ -130,7 +159,7 @@ class _HomeState extends State<Home> {
       animatedIcon: AnimatedIcons.menu_close,
       visible: true,
       curve: Curves.bounceIn,
-      backgroundColor: const Color.fromARGB(0xFF, 0xFB, 0x95, 0x32),
+      backgroundColor: ColorStyles.appbarColor,
       children: [
         SpeedDialChild(
             child: const Icon(Icons.settings_sharp, color: Colors.white),
@@ -139,8 +168,8 @@ class _HomeState extends State<Home> {
                 fontWeight: FontWeight.w500,
                 color: Colors.white,
                 fontSize: 13.0),
-            backgroundColor: const Color.fromARGB(0xFF, 0xFB, 0x95, 0x32),
-            labelBackgroundColor: const Color.fromARGB(0xFF, 0xFB, 0x95, 0x32),
+            backgroundColor: ColorStyles.appbarColor,
+            labelBackgroundColor: ColorStyles.appbarColor,
             onTap: () {
               dialog(context, 1, _homeProvider);
             }),
@@ -150,8 +179,8 @@ class _HomeState extends State<Home> {
             color: Colors.white,
           ),
           label: "참가",
-          backgroundColor: const Color.fromARGB(0xFF, 0xFB, 0x95, 0x32),
-          labelBackgroundColor: const Color.fromARGB(0xFF, 0xFB, 0x95, 0x32),
+          backgroundColor: ColorStyles.appbarColor,
+          labelBackgroundColor: ColorStyles.appbarColor,
           labelStyle: const TextStyle(
               fontWeight: FontWeight.w500, color: Colors.white, fontSize: 13.0),
           onTap: () {

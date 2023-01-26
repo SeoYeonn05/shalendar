@@ -38,15 +38,12 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
     // TODO: implement initState
     super.initState();
     _selectedDay = _focusedDay;
-    print(todoController.todoList);
     _selectedEvents =
         ValueNotifier(_getEventsForDay(_selectedDay!, todoController.todoList));
   }
 
   void _fetchData() async {
     bool result = await todoController.todoIndex(widget.calendar.calendarId!);
-    print("result : $result");
-    print(todoController.todoList);
   }
 
   /// 뒤로가기 버튼 눌렀을 때

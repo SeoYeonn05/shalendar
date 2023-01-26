@@ -1,7 +1,7 @@
 
 class Result {
-  bool isSuccess;
+  String result;
   dynamic response;
 
-  Result({required this.isSuccess, required this.response});
+  Result({required this.result, required this.response});
 }

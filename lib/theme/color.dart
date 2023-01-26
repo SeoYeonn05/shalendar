@@ -8,4 +8,6 @@ class ColorStyles {
   static const Color themeGreen = Color(0xffBBFFCA);
   static const Color themeOrange = Color(0xffFFDDAB);
   static const Color themeBlack = Color(0xffB1B1B1);
+  static const Color appbarColor = Color(0xff676767);
+  static const Color backgroundColor = Color(0xff3E3E3E);
 }
