@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shalendar/provider/home_provider.dart';
 
 import '../controller/user_controller.dart';
 import '../data/ResponseUserPost.dart';
@@ -7,15 +8,18 @@ import '../network/network_helper.dart';
 import '../theme/color.dart';
 import '../utils/snackbar.dart';
 
-void dialog(BuildContext context, int type) async {
-  (type == 1) ? addCalendarDialog(context) : joinCalendarDialog(context);
+void dialog(BuildContext context, int type, HomeProvider _homeProvider) async {
+  (type == 1)
+      ? addCalendarDialog(context, _homeProvider)
+      : joinCalendarDialog(context, _homeProvider);
 }
 
 // 기본값 themeYellow
 String? color = "themeYellow";
 
 // 캘린더 추가 다이얼로그에서 ok 클릭 시
-void addCalendar(BuildContext context, String? name) async {
+void addCalendar(
+    BuildContext context, String? name, HomeProvider _homeProvider) async {
   final userController = Get.put(UserController());
   final _networkHelper = NetworkHelper();
 
@@ -33,10 +37,12 @@ void addCalendar(BuildContext context, String? name) async {
   } else {
     showSnackBar(context, "캘린더 생성 실패.");
   }
+  _homeProvider.getCalendar();
 }
 
 // 캘린더 참가 다이얼로그에서 ok 클릭 시
-void joinCalendar(BuildContext context, String? code) async {
+void joinCalendar(
+    BuildContext context, String? code, HomeProvider _homeProvider) async {
   final userController = Get.put(UserController());
   final _networkHelper = NetworkHelper();
 
@@ -53,9 +59,10 @@ void joinCalendar(BuildContext context, String? code) async {
   } else {
     showSnackBar(context, result.result);
   }
+  _homeProvider.getCalendar();
 }
 
-void addCalendarDialog(BuildContext context) async {
+void addCalendarDialog(BuildContext context, HomeProvider _homeProvider) async {
   final _textController = TextEditingController();
 
   await showDialog(
@@ -127,7 +134,7 @@ void addCalendarDialog(BuildContext context) async {
                   SizedBox(width: 30),
                   TextButton(
                     onPressed: () {
-                      addCalendar(context, _textController.text);
+                      addCalendar(context, _textController.text, _homeProvider);
                       Navigator.pop(context, 'OK');
                     },
                     child: Text(
@@ -146,7 +153,8 @@ void addCalendarDialog(BuildContext context) async {
       });
 }
 
-void joinCalendarDialog(BuildContext context) async {
+void joinCalendarDialog(
+    BuildContext context, HomeProvider _homeProvider) async {
   final _textController = TextEditingController();
 
   await showDialog(
@@ -218,7 +226,8 @@ void joinCalendarDialog(BuildContext context) async {
                   SizedBox(width: 30),
                   TextButton(
                     onPressed: () {
-                      joinCalendar(context, _textController.text);
+                      joinCalendar(
+                          context, _textController.text, _homeProvider);
                       Navigator.pop(context, 'OK');
                     },
                     child: Text(
