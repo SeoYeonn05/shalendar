@@ -136,7 +136,7 @@ class _HomeState extends State<Home> {
             backgroundColor: const Color.fromARGB(0xFF, 0xFB, 0x95, 0x32),
             labelBackgroundColor: const Color.fromARGB(0xFF, 0xFB, 0x95, 0x32),
             onTap: () {
-              dialog(context, 1);
+              dialog(context, 1, _homeProvider);
             }),
         SpeedDialChild(
           child: const Icon(
@@ -149,7 +149,7 @@ class _HomeState extends State<Home> {
           labelStyle: const TextStyle(
               fontWeight: FontWeight.w500, color: Colors.white, fontSize: 13.0),
           onTap: () {
-            dialog(context, 2);
+            dialog(context, 2, _homeProvider);
           },
         )
       ],
