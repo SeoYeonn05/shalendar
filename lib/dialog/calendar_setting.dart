@@ -206,7 +206,7 @@ void deleteCalendar(BuildContext context, Calendar calendar) async {
   final userController = Get.put(UserController());
 
   // 삭제 통신
-  bool result = await todoController.deleteCalendartUser(calendar.calendarId!);
+  bool result = await todoController.unsharedCalendar(calendar.calendarId!);
 
   // 성공시 화면 이동, 스낵바 출력, 로컬에 데이터 삭제
   if (result) {
