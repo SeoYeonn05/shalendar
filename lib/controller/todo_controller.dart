@@ -11,6 +11,8 @@ class TodoController extends GetxController {
   final userController = Get.put(UserController());
 
   List todoList = [];
+  List userList = [];
+  String joinCode = "";
   int theme = int.parse(ColorStyles.themeYellow.value.toString());
 
   Future<bool> todoIndex(String calendarId) async {
@@ -28,6 +30,26 @@ class TodoController extends GetxController {
 
   Future<bool> loadTheme(String calendarId) async {
     theme = (await userController.getTheme(int.parse(calendarId)));
+    update();
+    return true;
+  }
+
+  Future<bool> getJoinCode(String calendarId) async {
+    Map? body = await todoRepo.getJoinCode(calendarId);
+    if (body == null) {
+      return false;
+    }
+    joinCode = body['shareKey'];
+    update();
+    return true;
+  }
+
+  Future<bool> geCalendartUser(String calendarId) async {
+    Map? body = await todoRepo.geCalendartUser(calendarId);
+    if (body == null) {
+      return false;
+    }
+    userList = body['users'];
     update();
     return true;
   }
