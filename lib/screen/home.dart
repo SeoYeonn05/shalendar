@@ -47,18 +47,23 @@ class _HomeState extends State<Home> {
       } else if(state == HomeState.calendarCompleted){
         _homeProvider.getInform();
         return messageWidget("장보를 불러오는 중입니다");
-      }else{
+      } else if(state == HomeState.infoCompleted){
+        _homeProvider.getAchievementRate();
+        return messageWidget("장보를 불러오는 중입니다");
+      }
+      else{
         final calendarList = _homeProvider.calendarList;
         final themeMap = _homeProvider.themeMap;
         late Map<String, String> calUserName = _homeProvider.calUserName;
         late Map<String, int> calUserCount = _homeProvider.calUserCount;
+        late Map<String, double> completeRate = _homeProvider.completeRate;
         if (calendarList != null) {
           return Expanded(
               child: GridView.builder(
                   scrollDirection: Axis.vertical,
                   itemCount: calendarList.length,
                   itemBuilder: (BuildContext context, index) =>
-                      listCard(calendarList[index], themeMap, calUserName, calUserCount),
+                      listCard(calendarList[index], themeMap, calUserName, calUserCount, completeRate),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       childAspectRatio: 4 / 3,
@@ -95,7 +100,13 @@ class _HomeState extends State<Home> {
         ),
       );
 
-  Widget listCard(Calendar calendar, Map<int, int> themeMap, Map<String, String> userName, Map<String, int> count) => Container(
+  Widget listCard(
+      Calendar calendar,
+      Map<int, int> themeMap,
+      Map<String, String> userName,
+      Map<String, int> count,
+      Map<String, double> completeRate) =>
+      Container(
       child: Card(
           semanticContainer: true,
           clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -142,13 +153,13 @@ class _HomeState extends State<Home> {
                                 fontWeight: FontWeight.w600)),
                         const SizedBox(height: 10),
                         Row(
-                          children: const [
-                            Flexible(
+                          children: [
+                            const Flexible(
                                 fit: FlexFit.loose,
                                 child: SizedBox(
                                     width: 200
                                 )),
-                            Text("84%") /*${_homeProvider.completeTodoRate[calendar.calendarId]}*/
+                            Text("${completeRate[calendar.calendarId]}%") /*${_homeProvider.completeTodoRate[calendar.calendarId]}*/
                           ],
                         ),
                         Row(

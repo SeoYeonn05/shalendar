@@ -15,7 +15,7 @@ import '../data/user.dart';
 import '../network/todo_repository.dart';
 import 'bottom_nav_provider.dart';
 
-enum HomeState { loading, empty, calendarCompleted, infoCompleted }
+enum HomeState { loading, empty, calendarCompleted, a, infoCompleted }
 
 class HomeProvider extends ChangeNotifier {
   late HomeState state = HomeState.loading;
@@ -24,7 +24,8 @@ class HomeProvider extends ChangeNotifier {
   late Map<int, int> themeMap;
   late Map<String, String> calUserName={};
   late Map<String, int> calUserCount={};
-  late Map<String, int> completeRate;
+  late Map<String, double> completeRate={};
+
 
 
   setState(currentState) {
@@ -33,7 +34,6 @@ class HomeProvider extends ChangeNotifier {
   }
 
   var logger = Logger(printer: PrettyPrinter());
-  late Map<String, int> achievementRateList;
 
   final _navigatorKeys = {
     BottomItem.calendar: GlobalKey<NavigatorState>(),
@@ -98,64 +98,68 @@ class HomeProvider extends ChangeNotifier {
   }
 
   // 성취도 계산
-  Future<double?> getAchievementRate(String calId) async{
-    final NetworkHelper networkHelper = NetworkHelper();
-    final UserController userController = Get.put(UserController());
-    var url = "calendar/$calId/todo";
+  Future getAchievementRate() async{
     int count=0;
     int completeCount=0;
+    List result = [];
+    List todoList = [];
+    final todoRepo = Get.put(TodoRepository());
 
-    // 캘린더에 속해있는 할 일들을 검색
-    try {
-      Map<String, String> headers = <String, String>{};
-      headers['token'] = (await userController.getToken())!;
-      Map<String, Object?> response =
-      await networkHelper.getWithHeaders(url, headers);
-      Object? todos = response['todos'];
-
-      if (todos != null) {
-        logger.d('todos');
-        // User.fromJson(json.decode(response.body)) 형태로 사용
-
-        todos = todos as List;
-        for (var todo in todos) {
-          count++;
-          Map<String, dynamic> tmp = todo;
-          Todo res = Todo.fromJson(todo);
-
-          if(res.isComplete!!){
-            completeCount++;
-          }
-
-          todoList?.add(res);
-        }
-        return completeCount/count * 100;
-      } else {
-
-        return null;
-      }
-
-      notifyListeners();
-    } catch (e) {
-      logger.d(e);
+    if(calendarList == null){
       return null;
     }
+
+    logger.d('안녕 todo?');
+
+    for (var cal in calendarList!!){
+      // 캘린더에 속해있는 할 일들을 검색
+      var calId = cal.calendarId;
+      count = 0;
+      completeCount = 0;
+
+      Map? body = await todoRepo.todoIndex(calId!);
+
+      if (body == null) {
+        completeRate[cal.calendarId!] = 0;
+        continue;
+      }
+
+      List todo = body['todos'].map(((e) => Todo.parse(e))).toList();
+      todoList = todo;
+
+      logger.d('todoList $todoList');
+
+      for (var todo in todoList) {
+        count++;
+
+        Todo res = Todo.fromJson(todo);
+
+        logger.d('todo: $res');
+
+        if(res.isComplete!!){
+          completeCount++;
+        }
+
+        logger.d("퍼센트는 ${completeCount/count * 100}");
+        completeRate[cal.calendarId!] = completeCount/count * 100;
+      }
+    }
+    state = HomeState.a;
+    notifyListeners();
   }
 
   Future getCalUser(String calId) async{
-    final NetworkHelper networkHelper = NetworkHelper();
-    final UserController userController = Get.put(UserController());
     List userList = [];
     final todoRepo = Get.put(TodoRepository());
 
     Map? response = await todoRepo.getCalendartUser(calId);
 
     if (response == null) {
-      return false;
+      return null;
     }
 
     userList = response['users'];
-    logger.d("homeProvider $userList");
+    //logger.d("homeProvider $userList");
 
     return userList;
   }
@@ -165,13 +169,15 @@ class HomeProvider extends ChangeNotifier {
     List userList = [];
     String? currentName;
 
+    logger.d('안녕 user?');
+
     try{
       if(calendarList == null){
         return;
       }
       for (var cal in calendarList!!){
         count = 0;
-        logger.d("getInfo calendarList: $calendarList");
+        //logger.d("getInfo calendarList: $calendarList");
         var calId = cal.calendarId;
         userList = await getCalUser(calId!!);
 
@@ -184,10 +190,10 @@ class HomeProvider extends ChangeNotifier {
 
         calUserCount[calId] = count;
         calUserName[calId] = currentName!!;
-
       }
       state = HomeState.infoCompleted;
       notifyListeners();
+
     } catch(e){
       state = HomeState.empty;
     }
