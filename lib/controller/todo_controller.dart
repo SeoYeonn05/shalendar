@@ -9,8 +9,10 @@ class TodoController extends GetxController {
   List todoList = [];
 
   Future<bool> todoIndex(String calendarId) async {
+    todoList = [];
     Map? body = await todoRepo.todoIndex(calendarId);
     if (body == null) {
+      update();
       return false;
     }
     List todo = body['todos'].map(((e) => Todo.parse(e))).toList();

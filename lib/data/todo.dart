@@ -1,7 +1,7 @@
 import 'dart:ffi';
 
 class Todo {
-  String? todoId;
+  int? todoId;
   String? title;
   DateTime? createdAt;
   String? calendarId;
@@ -36,7 +36,7 @@ class Todo {
   }
 
   Todo.parse(Map m) {
-    todoId = m['todo_Id'];
+    todoId = m['todo_id'];
     title = m['title'];
     createdAt = DateTime.parse(m['created_at']);
     isComplete = (m['isComplete'] == 0) ? false : true;

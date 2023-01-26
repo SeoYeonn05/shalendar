@@ -1,12 +1,15 @@
+import 'dart:collection';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shalendar/controller/todo_controller.dart';
+import 'package:shalendar/data/todo.dart';
 import 'package:shalendar/screen/calendar_todo.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import '../data/calendar.dart';
+import '../utils/calendar_event.dart';
 import 'home.dart';
 
 class EventCalendarScreen extends StatefulWidget {
@@ -18,9 +21,10 @@ class EventCalendarScreen extends StatefulWidget {
 }
 
 class _EventCalendarScreenState extends State<EventCalendarScreen> {
+  late final ValueNotifier<List<Event>> _selectedEvents;
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDate;
+  DateTime? _selectedDay;
 
   Map<String, List> mySelectedEvents = {};
 
@@ -30,16 +34,19 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
 
   @override
   void initState() {
+    _fetchData();
     // TODO: implement initState
     super.initState();
-    _selectedDate = _focusedDay;
-    _fetchData();
+    _selectedDay = _focusedDay;
     print(todoController.todoList);
+    _selectedEvents =
+        ValueNotifier(_getEventsForDay(_selectedDay!, todoController.todoList));
   }
 
   void _fetchData() async {
     bool result = await todoController.todoIndex(widget.calendar.calendarId!);
     print("result : $result");
+    print(todoController.todoList);
   }
 
   /// 뒤로가기 버튼 눌렀을 때
@@ -47,96 +54,46 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
     Navigator.pop(context);
   }
 
-  List _listOfDayEvents(DateTime dateTime) {
-    if (mySelectedEvents[DateFormat('yyyy-MM-dd').format(dateTime)] != null) {
-      return mySelectedEvents[DateFormat('yyyy-MM-dd').format(dateTime)]!;
-    } else {
-      return [];
-    }
+  void goCalendarTodo() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (b) =>
+              todolist(_focusedDay, int.parse(widget.calendar.calendarId!))),
+    );
   }
 
-  //달력 안에서 일정 적기
-  _showAddEventDialog() async {
-    await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text(
-          'Add New Event',
-          textAlign: TextAlign.center,
-        ),
-        content: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: titleController,
-              textCapitalization: TextCapitalization.words,
-              decoration: const InputDecoration(
-                labelText: 'Title',
-              ),
-            ),
-            TextField(
-              controller: descpController,
-              textCapitalization: TextCapitalization.words,
-              decoration: const InputDecoration(labelText: 'Description'),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            child: const Text('Add Event'),
-            onPressed: () {
-              if (titleController.text.isEmpty &&
-                  descpController.text.isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Required title and description'),
-                    duration: Duration(seconds: 2),
-                  ),
-                );
-                //Navigator.pop(context);
-                return;
-              } else {
-                print(titleController.text);
-                print(descpController.text);
+  /// 받아온 todo 목록을 캘린더에 표시
+  List<Event> _getEventsForDay(DateTime day, List<dynamic> todoList) {
+    var todoSource = Map<DateTime, List<Event>>();
+    todoList.forEach((element) {
+      var e = element as Todo;
+      if (todoSource[e.createdAt!] == null) {
+        todoSource[e.createdAt!] = [Event(e.title!)];
+      } else {
+        todoSource[e.createdAt!]?.add(Event(e.title!));
+      }
+    });
 
-                setState(() {
-                  if (mySelectedEvents[
-                          DateFormat('yyyy-MM-dd').format(_selectedDate!)] !=
-                      null) {
-                    mySelectedEvents[
-                            DateFormat('yyyy-MM-dd').format(_selectedDate!)]
-                        ?.add({
-                      "eventTitle": titleController.text,
-                      "eventDescp": descpController.text,
-                    });
-                  } else {
-                    mySelectedEvents[
-                        DateFormat('yyyy-MM-dd').format(_selectedDate!)] = [
-                      {
-                        "eventTitle": titleController.text,
-                        "eventDescp": descpController.text,
-                      }
-                    ];
-                  }
-                });
+    var todos = LinkedHashMap<DateTime, List<Event>>(
+      equals: isSameDay,
+      hashCode: getHashCode,
+    )..addAll(todoSource);
 
-                print(
-                    "New Event for backend developer ${json.encode(mySelectedEvents)}");
-                titleController.clear();
-                descpController.clear();
-                Navigator.pop(context);
-                return;
-              }
-            },
-          )
-        ],
-      ),
-    );
+    // Implementation example
+    return todos[day] ?? [];
+  }
+
+  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+    if (!isSameDay(_selectedDay, selectedDay)) {
+      setState(() {
+        _selectedDay = selectedDay;
+        _focusedDay = focusedDay;
+      });
+
+      _selectedEvents.value =
+          _getEventsForDay(selectedDay, todoController.todoList);
+    }
   }
 
   @override
@@ -155,92 +112,70 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
               color: Colors.white,
             )),
       ),
-      body: SingleChildScrollView(
-        child: Column(
+      body: GetBuilder<TodoController>(builder: (c) {
+        return Column(
           children: [
-            TableCalendar(
-              firstDay: DateTime(2010),
-              lastDay: DateTime(2050),
+            TableCalendar<Event>(
+              firstDay: kFirstDay,
+              lastDay: kLastDay,
               focusedDay: _focusedDay,
+              selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
               calendarFormat: _calendarFormat,
-              onDaySelected: (selectedDay, focusedDay) {
-                if (!isSameDay(_selectedDate, selectedDay)) {
-                  setState(() {
-                    _selectedDate = selectedDay;
-                    _focusedDay = focusedDay;
-                  });
-                }
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (b) => todolist()),
-                // );
-              },
-              selectedDayPredicate: (day) {
-                return isSameDay(_selectedDate, day);
-              },
+              eventLoader: (day) => _getEventsForDay(day, c.todoList),
+              startingDayOfWeek: StartingDayOfWeek.monday,
+              calendarStyle: CalendarStyle(
+                // Use `CalendarStyle` to customize the UI
+                outsideDaysVisible: false,
+              ),
+              onDaySelected: _onDaySelected,
               onFormatChanged: (format) {
                 if (_calendarFormat != format) {
-                  // Call `setState()` when updating calendar format
                   setState(() {
                     _calendarFormat = format;
                   });
                 }
               },
               onPageChanged: (focusedDay) {
-                // No need to call `setState()` here
                 _focusedDay = focusedDay;
               },
-              eventLoader: _listOfDayEvents,
-              calendarStyle: const CalendarStyle(
-                /*rowDecoration: BoxDecoration( // 달력 내부 배경색
-                  color: Colors.yellow,
-                ),*/
-                isTodayHighlighted: true,
-                selectedDecoration: BoxDecoration(
-                  // 누른날짜 색깔
-                  color: Colors.blue,
-                  shape: BoxShape.circle,
-                ),
-                selectedTextStyle: TextStyle(color: Colors.white), // 누른날 숫자색
-                todayDecoration: BoxDecoration(
-                  // 오늘 날짜 색
-                  color: Color.fromARGB(255, 0, 247, 33),
-                  shape: BoxShape.circle,
-                ),
-                defaultDecoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                ),
-                weekendDecoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                ),
-              ),
-              headerStyle: HeaderStyle(
-                formatButtonVisible: true,
-                titleCentered: true,
-                formatButtonShowsNext: false,
-                formatButtonDecoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-                formatButtonTextStyle: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
             ),
-            ..._listOfDayEvents(_selectedDate!).map(
-              (myEvents) => ListTile(
-                title: Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Text('Event Title:   ${myEvents['eventTitle']}'),
-                ),
+            const SizedBox(height: 8.0),
+            Expanded(
+              child: ValueListenableBuilder<List<Event>>(
+                valueListenable: _selectedEvents,
+                builder: (context, value, _) {
+                  return ListView.builder(
+                    itemCount: value.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 12.0,
+                          vertical: 4.0,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(),
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: ListTile(
+                          onTap: () => print('${value[index]}'),
+                          title: Text('${value[index]}'),
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
             ),
           ],
-        ),
-      ),
+        );
+      }),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddEventDialog(),
-        child: const Icon(Icons.add),
+        backgroundColor: Color(0xff676767),
+        onPressed: goCalendarTodo,
+        child: const Icon(
+          Icons.keyboard_arrow_right,
+          size: 40,
+        ),
       ),
     );
   }
