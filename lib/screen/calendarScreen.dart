@@ -1,11 +1,15 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:shalendar/screen/calendar_todo.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
+import '../data/calendar.dart';
+import 'home.dart';
 
 class EventCalendarScreen extends StatefulWidget {
-  const EventCalendarScreen({Key? key}) : super(key: key);
+  Calendar calendar;
+  EventCalendarScreen(this.calendar, {Key? key}) : super(key: key);
 
   @override
   State<EventCalendarScreen> createState() => _EventCalendarScreenState();
@@ -26,6 +30,11 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
     // TODO: implement initState
     super.initState();
     _selectedDate = _focusedDay;
+  }
+
+  /// 뒤로가기 버튼 눌렀을 때
+  void backButton() {
+    Navigator.pop(context);
   }
 
   List _listOfDayEvents(DateTime dateTime) {
@@ -125,8 +134,15 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        title: Text('${widget.calendar.calendarName}'),
         centerTitle: true,
-        title: const Text('Event Calendar Example'),
+        backgroundColor: Color(0xff676767),
+        leading: IconButton(
+            onPressed: backButton,
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            )),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -138,15 +154,15 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
               calendarFormat: _calendarFormat,
               onDaySelected: (selectedDay, focusedDay) {
                 if (!isSameDay(_selectedDate, selectedDay)) {
-                  // Call `setState()` when updating the selected day
                   setState(() {
                     _selectedDate = selectedDay;
                     _focusedDay = focusedDay;
                   });
                 }
-                /*Navigator.push(context, MaterialPageRoute(  //날짜클릭시 그날의 todo로 이동 어떻게하지
-                  builder: (context) => todolist())            
-                );*/
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (b) => todolist()),
+                // );
               },
               selectedDayPredicate: (day) {
                 return isSameDay(_selectedDate, day);
@@ -202,15 +218,10 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
             ),
             ..._listOfDayEvents(_selectedDate!).map(
               (myEvents) => ListTile(
-                leading: const Icon(
-                  Icons.done,
-                  color: Colors.teal,
-                ),
                 title: Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: Text('Event Title:   ${myEvents['eventTitle']}'),
                 ),
-                subtitle: Text('Description:   ${myEvents['eventDescp']}'),
               ),
             ),
           ],

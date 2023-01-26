@@ -4,6 +4,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:shalendar/controller/user_controller.dart';
+import 'package:shalendar/screen/calendarScreen.dart';
 import 'package:shalendar/theme/color.dart';
 
 import '../data/calendar.dart';
@@ -95,6 +96,11 @@ class _HomeState extends State<Home> {
               onTap: () {
                 // 네비게이터로 이동
                 print('clicked ${calendar.calendarName}');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (b) => EventCalendarScreen(calendar)),
+                );
               },
               child: Stack(fit: StackFit.expand, children: <Widget>[
 /*                Image.asset(
