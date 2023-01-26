@@ -4,16 +4,9 @@ class Todo {
   int? todoId;
   String? title;
   DateTime? createdAt;
-  DateTime? createdAt;
   String? calendarId;
   bool? isComplete;
 
-  Todo(
-      {this.todoId,
-      this.title,
-      this.createdAt,
-      this.calendarId,
-      this.isComplete});
   Todo(
       {this.todoId,
       this.title,
@@ -30,7 +23,6 @@ class Todo {
         title: tmp['user_conn_id']);
   }
 
-  Map<String, dynamic> toJson() {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data[''] = todoId;
@@ -50,4 +42,3 @@ class Todo {
     calendarId = m['calendar_id'].toString();
   }
 }
-

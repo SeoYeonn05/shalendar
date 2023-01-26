@@ -29,7 +29,7 @@ class TodoProvider extends ChangeNotifier {
       for (var todo in todos) {
         Map<String, dynamic> tmp = todo;
         Todo newTodo = Todo(
-          todoId: tmp['todo_id'].toString(),
+          todoId: tmp['todo_id'],
           title: tmp['title'],
           createdAt: DateTime.parse(tmp['created_at']),
           calendarId: tmp['calendar_id'].toString(),

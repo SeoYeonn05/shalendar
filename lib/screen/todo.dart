@@ -39,7 +39,7 @@ class _TodoScreenState extends State<TodoScreen> {
     final calendarList = _homeProvider.calendarList;
     return Scaffold(
         body: Container(
-            color: ColorStyles.themeBlack,
+            color: ColorStyles.backgroundColor,
             padding: EdgeInsets.only(top: 10),
             child: ListView.builder(
               itemBuilder: ((context, index) => todoCard(
@@ -73,11 +73,17 @@ class _TodoScreenState extends State<TodoScreen> {
               width: 20,
               height: 20,
               decoration: BoxDecoration(
-                color: Color(themeMap[int.parse(calendar.calendarId ?? '0')] ??
-                    4294311867),
-                shape: BoxShape.circle,
-                border: Border.all(width: 1, color: Colors.black),
-              ),
+                  color: Color(
+                      themeMap[int.parse(calendar.calendarId ?? '0')] ??
+                          4294311867),
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey.withOpacity(0.6),
+                        spreadRadius: 2,
+                        blurRadius: 1,
+                        offset: Offset(2, 2)),
+                  ]),
             ),
             SizedBox(width: 5),
             Expanded(
@@ -135,7 +141,7 @@ class _TodoScreenState extends State<TodoScreen> {
                               todo.isComplete = value;
                               final result =
                                   _todoProvider.changeTodoCompleteState(
-                                      int.parse(todo.todoId ?? '0'));
+                                      todo.todoId?.toInt() ?? 0);
                               if (result == false) {
                                 showSnackBar(context, '변경에 실패했습니다.');
                               }
