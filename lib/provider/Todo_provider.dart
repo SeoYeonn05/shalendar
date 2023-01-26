@@ -40,6 +40,9 @@ class TodoProvider extends ChangeNotifier {
         themeMap[tmp['calendar_id']] =
             await userController.getTheme(tmp['calendar_id']);
       }
+      // todoList 날짜 순으로 정렬
+      todoList!.sort((a, b) => a.createdAt!.millisecondsSinceEpoch
+          .compareTo(b.createdAt!.millisecondsSinceEpoch));
       notifyListeners();
     } catch (e) {
       logger.d(e);
