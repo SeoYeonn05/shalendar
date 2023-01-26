@@ -9,6 +9,7 @@ import 'package:shalendar/controller/user_controller.dart';
 import 'package:shalendar/data/calendar.dart';
 import 'package:shalendar/network/network_helper.dart';
 import 'package:http/http.dart' as http;
+import 'package:shalendar/theme/color.dart';
 import 'bottom_nav_provider.dart';
 
 enum HomeState { loading, empty, completed }
@@ -36,11 +37,13 @@ class HomeProvider extends ChangeNotifier {
   Future getCalendar() async {
     final NetworkHelper networkHelper = NetworkHelper();
     final UserController userController = Get.put(UserController());
+
     calendarList = [];
     themeMap = <int, int>{};
     try {
       Map<String, String> headers = <String, String>{};
-      headers['token'] = (await userController.getToken())!;
+      var token = (await userController.getToken())!;
+      headers['token'] = token;
       Map<String, Object?> response =
           await networkHelper.getWithHeaders("calendar", headers);
       Object? founded = response['calendars'];
@@ -62,7 +65,7 @@ class HomeProvider extends ChangeNotifier {
               userConnId: tmp['user_conn_id']);
           calendarList?.add(res);
           themeMap[tmp['calendar_id']] =
-              int.parse(await userController.getTheme(tmp['calendar_id']));
+              await userController.getTheme(tmp['calendar_id']);
           // themeMap![tmp['calendar_id']] = Color(
           //     int.parse(()));
         }
