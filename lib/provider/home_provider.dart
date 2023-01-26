@@ -11,18 +11,29 @@ import 'package:shalendar/network/network_helper.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../data/todo.dart';
+import '../data/user.dart';
+import '../network/todo_repository.dart';
 import 'bottom_nav_provider.dart';
 
-enum HomeState { loading, empty, completed }
+enum HomeState { loading, empty, calendarCompleted, infoCompleted }
 
 class HomeProvider extends ChangeNotifier {
   late HomeState state = HomeState.loading;
   late List<Calendar>? calendarList;
   late List<Todo>? todoList;
   late Map<int, int> themeMap;
+  late Map<String, String> calUserName={};
+  late Map<String, int> calUserCount={};
+  late Map<String, int> completeRate;
+
+
+  setState(currentState) {
+    state = currentState;
+    notifyListeners();
+  }
+
   var logger = Logger(printer: PrettyPrinter());
-  late Map<String, int> achievementRateList = {
-  };
+  late Map<String, int> achievementRateList;
 
   final _navigatorKeys = {
     BottomItem.calendar: GlobalKey<NavigatorState>(),
@@ -72,10 +83,8 @@ class HomeProvider extends ChangeNotifier {
           calendarList?.add(res);
 
           themeMap[tmp['calendar_id']] = await userController.getTheme(tmp['calendar_id']);
-
-          logger.d(tmp["calendar_id"]);
         }
-        state = HomeState.completed;
+        state = HomeState.calendarCompleted;
         notifyListeners();
       } else {
         state = HomeState.empty;
@@ -104,11 +113,8 @@ class HomeProvider extends ChangeNotifier {
       await networkHelper.getWithHeaders(url, headers);
       Object? todos = response['todos'];
 
-      // logger.d(calendars);
-      // logger.d(founded.runtimeType);
-
       if (todos != null) {
-        logger.d('hi');
+        logger.d('todos');
         // User.fromJson(json.decode(response.body)) 형태로 사용
 
         todos = todos as List;
@@ -128,10 +134,62 @@ class HomeProvider extends ChangeNotifier {
 
         return null;
       }
+
       notifyListeners();
     } catch (e) {
       logger.d(e);
       return null;
+    }
+  }
+
+  Future getCalUser(String calId) async{
+    final NetworkHelper networkHelper = NetworkHelper();
+    final UserController userController = Get.put(UserController());
+    List userList = [];
+    final todoRepo = Get.put(TodoRepository());
+
+    Map? response = await todoRepo.getCalendartUser(calId);
+
+    if (response == null) {
+      return false;
+    }
+
+    userList = response['users'];
+    logger.d("homeProvider $userList");
+
+    return userList;
+  }
+
+  Future<void> getInform() async{
+    int count=0;
+    List userList = [];
+    String? currentName;
+
+    try{
+      if(calendarList == null){
+        return;
+      }
+      for (var cal in calendarList!!){
+        count = 0;
+        logger.d("getInfo calendarList: $calendarList");
+        var calId = cal.calendarId;
+        userList = await getCalUser(calId!!);
+
+        Map<String, dynamic> tmp = userList[0];
+        currentName = tmp['user_name'];
+
+        for (var user in userList) {
+          count++;
+        }
+
+        calUserCount[calId] = count;
+        calUserName[calId] = currentName!!;
+
+      }
+      state = HomeState.infoCompleted;
+      notifyListeners();
+    } catch(e){
+      state = HomeState.empty;
     }
   }
 }

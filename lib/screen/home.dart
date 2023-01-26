@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:shalendar/controller/user_controller.dart';
 import 'package:shalendar/provider/Todo_provider.dart';
@@ -24,28 +25,7 @@ class _HomeState extends State<Home> {
   late HomeState state;
   late UserController userController;
 
-  List<Calendar> calList = [
-    Calendar(
-        calendarId: "우왕",
-        calendarName: "이번주 할 일",
-        createdAt: DateTime(2022, 2, 1, 0, 0, 14, 0, 35),
-        userConnId: 1),
-    Calendar(
-        calendarId: "우왕",
-        calendarName: "이번주 할 일",
-        createdAt: DateTime(2022, 2, 1, 0, 0, 14, 0, 35),
-        userConnId: 1),
-    Calendar(
-        calendarId: "우왕",
-        calendarName: "이번주 할 일",
-        createdAt: DateTime(2022, 2, 1, 0, 0, 14, 0, 35),
-        userConnId: 1),
-    Calendar(
-        calendarId: "우왕",
-        calendarName: "이번주 할 일",
-        createdAt: DateTime(2022, 2, 1, 0, 0, 14, 0, 35),
-        userConnId: 1)
-  ];
+  var logger = Logger(printer: PrettyPrinter());
 
   @override
   initState() {
@@ -58,6 +38,37 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     _homeProvider = Provider.of<HomeProvider>(context);
     state = _homeProvider.state;
+
+    Widget routeListWidget() {
+      if (state == HomeState.loading) {
+        return messageWidget("로딩중");
+      } else if (state == HomeState.empty) {
+        return messageWidget("캘린더가 존재하지 않습니다");
+      } else if(state == HomeState.calendarCompleted){
+        _homeProvider.getInform();
+        return messageWidget("장보를 불러오는 중입니다");
+      }else{
+        final calendarList = _homeProvider.calendarList;
+        final themeMap = _homeProvider.themeMap;
+        late Map<String, String> calUserName = _homeProvider.calUserName;
+        late Map<String, int> calUserCount = _homeProvider.calUserCount;
+        if (calendarList != null) {
+          return Expanded(
+              child: GridView.builder(
+                  scrollDirection: Axis.vertical,
+                  itemCount: calendarList.length,
+                  itemBuilder: (BuildContext context, index) =>
+                      listCard(calendarList[index], themeMap, calUserName, calUserCount),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 4 / 3,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 10)));
+        } else {
+          return Container();
+        }
+      }
+    }
 
     return Scaffold(
         floatingActionButton: floatingButtons(),
@@ -73,31 +84,7 @@ class _HomeState extends State<Home> {
             )));
   }
 
-  Widget routeListWidget() {
-    if (state == HomeState.loading) {
-      return messageWidget("로딩중");
-    } else if (state == HomeState.empty) {
-      return messageWidget("캘린더가 존재하지 않습니다");
-    } else {
-      final calendarList = _homeProvider.calendarList;
-      final themeMap = _homeProvider.themeMap;
-      if (calendarList != null) {
-        return Expanded(
-            child: GridView.builder(
-                scrollDirection: Axis.vertical,
-                itemCount: calendarList.length,
-                itemBuilder: (BuildContext context, index) =>
-                    listCard(calendarList[index], themeMap),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 4 / 3,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10)));
-      } else {
-        return Container();
-      }
-    }
-  }
+
 
   Widget messageWidget(String message) => Container(
         height: 100,
@@ -108,7 +95,7 @@ class _HomeState extends State<Home> {
         ),
       );
 
-  Widget listCard(Calendar calendar, Map<int, int> themeMap) => Container(
+  Widget listCard(Calendar calendar, Map<int, int> themeMap, Map<String, String> userName, Map<String, int> count) => Container(
       child: Card(
           semanticContainer: true,
           clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -165,13 +152,13 @@ class _HomeState extends State<Home> {
                           ],
                         ),
                         Row(
-                          children: const [
-                            Flexible(
+                          children: [
+                            const Flexible(
                                 fit: FlexFit.loose,
                                 child: SizedBox(
                                     width: 50
                                 )),
-                            Text("정서연 외 11명")
+                            Text("${userName[calendar.calendarId]} 외 ${count[calendar.calendarId]}명")
                           ],
                         )
                       ],
@@ -180,6 +167,8 @@ class _HomeState extends State<Home> {
   Color selectColor(Map<int, int> themeColor, int calendarId) {
     return Color(themeColor[calendarId] ?? 0);
   }
+
+
 
   Widget? floatingButtons() {
     return SpeedDial(
