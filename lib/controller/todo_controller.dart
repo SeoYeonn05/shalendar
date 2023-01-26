@@ -11,6 +11,7 @@ class TodoController extends GetxController {
   final userController = Get.put(UserController());
 
   List todoList = [];
+  List todoDayList = [];
   List userList = [];
   String joinCode = "";
   int theme = int.parse(ColorStyles.themeYellow.value.toString());
@@ -24,6 +25,25 @@ class TodoController extends GetxController {
     }
     List todo = body['todos'].map(((e) => Todo.parse(e))).toList();
     todoList = todo;
+    update();
+    return true;
+  }
+
+  Future<bool> todoDayIndex(String calendarId, DateTime date) async {
+    todoDayList = [];
+    Map? body = await todoRepo.todoIndex(calendarId);
+    if (body == null) {
+      update();
+      return false;
+    }
+    List todo = body['todos'].map(((e) => Todo.parse(e))).toList();
+    todoList = todo;
+
+    todoDayList = todoList
+        .where((e) => (e.createdAt?.year == date.year &&
+            e.createdAt?.month == date.month &&
+            e.createdAt?.day == date.day))
+        .toList();
     update();
     return true;
   }

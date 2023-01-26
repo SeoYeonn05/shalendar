@@ -6,6 +6,8 @@ import 'package:shalendar/screen/todo.dart';
 import 'package:get/get.dart';
 import 'package:shalendar/utils/snackbar.dart';
 
+import '../controller/todo_controller.dart';
+
 /**
  * 선택한 일정의 title을 삭제하는 다이얼로그 위젯
  * 생성자 : DeleteTodoDialog(todoId)
@@ -15,11 +17,17 @@ class DeleteTodoDialog extends StatelessWidget {
   var todoId;
   var todoList;
   var index;
-  DeleteTodoDialog(this.todoId, this.todoList, this.index, {super.key});
+  var calendarId;
+  var createdAt;
+  DeleteTodoDialog(
+      this.todoId, this.todoList, this.index, this.calendarId, this.createdAt,
+      {super.key});
 
   final changeTodoController = TextEditingController();
   final NetworkHelper networkHelper = NetworkHelper();
   final UserController userController = Get.put(UserController());
+  final TodoController todoController = Get.put(TodoController());
+
   @override
   Widget build(BuildContext context) {
     return alertDialog(context);
@@ -72,6 +80,8 @@ class DeleteTodoDialog extends StatelessWidget {
                 // todo 수정하고 수정한 todo로 이동?
                 if (parsedResult == "ok") {
                   print('todo 삭제 완료');
+                  todoController.todoIndex(calendarId);
+                  todoController.todoDayIndex(calendarId, createdAt);
                   Navigator.of(context).pop();
                   todoList.removeAt(index);
                   showSnackBar(context, 'todo 삭제 완료');
