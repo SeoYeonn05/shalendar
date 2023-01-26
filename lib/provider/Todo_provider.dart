@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
+import 'package:shalendar/controller/todo_controller.dart';
 import 'package:shalendar/controller/user_controller.dart';
 import 'package:shalendar/data/todo.dart';
 import 'package:shalendar/network/network_helper.dart';
@@ -46,9 +47,10 @@ class TodoProvider extends ChangeNotifier {
     }
   }
 
-  Future getTodoListByCalendar(int calendarId) async {
+  Future getTodoListByCalendar(int calendarId, DateTime date) async {
     final NetworkHelper networkHelper = Get.put(NetworkHelper());
     final UserController userController = Get.put(UserController());
+
     try {
       todoList?.clear();
       themeMap.clear();
@@ -68,7 +70,11 @@ class TodoProvider extends ChangeNotifier {
           calendarId: tmp['calendar_id'].toString(),
           isComplete: (tmp['isComplete'] == 1),
         );
-        todoList?.add(newTodo);
+        if (newTodo.createdAt?.year == date.year &&
+            newTodo.createdAt?.month == date.month &&
+            newTodo.createdAt?.day == date.day) {
+          todoList?.add(newTodo);
+        }
         themeMap[tmp['calendar_id']] =
             await userController.getTheme(tmp['calendar_id']);
       }

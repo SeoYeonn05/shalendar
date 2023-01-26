@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shalendar/controller/todo_controller.dart';
 import 'package:shalendar/data/ResponseWithInsertId.dart';
 import 'package:shalendar/network/network_helper.dart';
 import 'package:shalendar/controller/user_controller.dart';
@@ -18,6 +19,7 @@ class AddTodoDialog extends StatelessWidget {
   final addTodoController = TextEditingController();
   final NetworkHelper networkHelper = NetworkHelper();
   final UserController userController = Get.put(UserController());
+  final TodoController todoController = Get.put(TodoController());
 
   @override
   Widget build(BuildContext context) {
@@ -88,6 +90,7 @@ class AddTodoDialog extends StatelessWidget {
                     // todo 수정하고 수정한 todo로 이동?
                     print('todo 생성 완료');
                     Navigator.of(context).pop();
+                    todoController.todoIndex(calendarId);
                     showSnackBar(context, 'todo 생성 완료');
                   } else {
                     Navigator.of(context).pop();

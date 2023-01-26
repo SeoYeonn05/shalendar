@@ -25,8 +25,8 @@ class _todolistState extends State<todolist> {
   @override
   void initState() {
     super.initState();
-    Provider.of<TodoProvider>(context, listen: false)
-        .getTodoListByCalendar(int.parse(widget.calendar.calendarId!));
+    Provider.of<TodoProvider>(context, listen: false).getTodoListByCalendar(
+        int.parse(widget.calendar.calendarId!), widget.date);
   }
 
   @override
