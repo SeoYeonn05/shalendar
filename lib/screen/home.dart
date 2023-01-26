@@ -102,78 +102,92 @@ class _HomeState extends State<Home> {
       );
 
   Widget listCard(
-          Calendar calendar,
-          Map<int, int> themeMap,
-          Map<String, String> userName,
-          Map<String, int> count,
-          Map<String, double> completeRate) =>
-      Container(
-          child: Card(
-              semanticContainer: true,
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
+      Calendar calendar,
+      Map<int, int> themeMap,
+      Map<String, String> userName,
+      Map<String, int> count,
+      Map<String, double> completeRate) {
+    // 캘린더에 소속해있는 인원 텍스트
+    // 혼자면 표시하지 않음
+    String userCountText = "";
+    if (count[calendar.calendarId] == 1) {
+      // userCountText = "${userName[calendar.calendarId]}";
+    } else {
+      userCountText =
+          "${userName[calendar.calendarId]} 외 ${count[calendar.calendarId]! - 1}명";
+    }
+
+    return Container(
+      child: Card(
+        semanticContainer: true,
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: InkWell(
+          onTap: () {
+            print('clicked ${calendar.calendarName}');
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (b) => MultiProvider(
+                  providers: [
+                    ChangeNotifierProvider(create: (context) => TodoProvider()),
+                  ],
+                  child: EventCalendarScreen(calendar),
+                ),
               ),
-              child: InkWell(
-                  onTap: () {
-                    print('clicked ${calendar.calendarName}');
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (b) => MultiProvider(
-                          providers: [
-                            ChangeNotifierProvider(
-                                create: (context) => TodoProvider()),
-                          ],
-                          child: EventCalendarScreen(calendar),
-                        ),
-                      ),
-                    );
-                  },
-                  child: Stack(fit: StackFit.expand, children: <Widget>[
+            );
+          },
+          child: Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
 /*                Image.asset(
                   route.image!,
                   fit: BoxFit.fill,
                 ),*/
-                    /// 테마에 따른 색상
-                    Container(
-                        //alignment: Alignment.bottomRight,
-                        padding: EdgeInsets.all(10),
-                        color: Color(
-                            themeMap[int.parse(calendar.calendarId ?? '0')] ??
-                                4294311867),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("${calendar.calendarName!}  ",
-                                style: const TextStyle(
-                                    fontFamily: 'Pretendard',
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w600)),
-                            const SizedBox(height: 10),
-                            Row(
-                              children: [
-                                const Flexible(
-                                    fit: FlexFit.loose,
-                                    child: SizedBox(width: 200)),
-                                Text(
-                                    "${completeRate[calendar.calendarId]?.toInt()}%") /*${_homeProvider.completeTodoRate[calendar.calendarId]}*/
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                const Flexible(
-                                    fit: FlexFit.loose,
-                                    child: SizedBox(width: 50)),
-                                Text(
-                                    "${userName[calendar.calendarId]} 외 ${count[calendar.calendarId]}명")
-                              ],
-                            )
-                          ],
-                        )),
-                  ]))));
+              /// 테마에 따른 색상
+              Container(
+                  //alignment: Alignment.bottomRight,
+                  padding: EdgeInsets.all(10),
+                  color: Color(
+                      themeMap[int.parse(calendar.calendarId ?? '0')] ??
+                          4294311867),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("${calendar.calendarName!}  ",
+                          style: const TextStyle(
+                              fontFamily: 'Pretendard',
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600)),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          const Flexible(
+                              fit: FlexFit.loose, child: SizedBox(width: 200)),
+                          Text(
+                              "${completeRate[calendar.calendarId]?.toInt()}%") /*${_homeProvider.completeTodoRate[calendar.calendarId]}*/
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          const Flexible(
+                              fit: FlexFit.loose, child: SizedBox(width: 50)),
+                          Text(userCountText)
+                        ],
+                      )
+                    ],
+                  )),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Color selectColor(Map<int, int> themeColor, int calendarId) {
     return Color(themeColor[calendarId] ?? 0);
   }

@@ -174,6 +174,8 @@ class NetworkHelper {
       return ResponseUserPost.fromJson(jsonDecode(response.body));
     } else if (response.statusCode == 500) {
       return ResponseUserPost.fromJson({'result': '캘린더 참가 코드가 잘못 되었습니다.'});
+    } else if (response.statusCode == 400) {
+      return ResponseUserPost.fromJson(jsonDecode(response.body));
     } else {
       return null;
     }
