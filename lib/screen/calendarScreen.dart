@@ -3,8 +3,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:shalendar/controller/todo_controller.dart';
 import 'package:shalendar/data/todo.dart';
+import 'package:shalendar/provider/Todo_provider.dart';
 import 'package:shalendar/screen/calendar_todo.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
@@ -63,11 +65,11 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
   /// 캘린더 해당 날짜로 들어갈 때
   void goCalendarTodo() {
     Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (b) =>
-              todolist(_focusedDay, int.parse(widget.calendar.calendarId!))),
-    );
+        context,
+        MaterialPageRoute(
+            builder: (b) => MultiProvider(providers: [
+                  ChangeNotifierProvider(create: (context) => TodoProvider()),
+                ], child: todolist(_focusedDay, widget.calendar))));
   }
 
   /// 받아온 todo 목록을 캘린더에 표시
