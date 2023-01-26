@@ -70,7 +70,8 @@ class AddTodoDialog extends StatelessWidget {
                   // make body
                   Map<String, dynamic> body = <String, dynamic>{};
                   body['title'] = addTodoController.text;
-                  body['created_at'] = createdAt.toString();
+                  body['created_at'] =
+                      "${createdAt.year}-${createdAt.month}-${createdAt.day} ${createdAt.hour}:${createdAt.minute}:${createdAt.second}";
                   // request url
                   var url = "calendar/$calendarId/todo";
                   // request headers
