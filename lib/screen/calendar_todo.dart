@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shalendar/data/calendar.dart';
 import 'package:shalendar/data/todo.dart';
 import 'package:shalendar/provider/Todo_provider.dart';
+import 'package:shalendar/theme/color.dart';
 import 'package:shalendar/utils/snackbar.dart';
 import 'package:shalendar/widget/addTodoDialog.dart';
 import 'package:shalendar/widget/deleteTodoDialog.dart';
@@ -34,44 +35,48 @@ class _todolistState extends State<todolist> {
     widget.todoList = Provider.of<TodoProvider>(context).todoList!;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-            "${widget.date.year}년 ${widget.date.month}월 ${widget.date.day}일의 일정"),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AddTodoDialog(widget.calendar.calendarId, widget.date);
-              });
-        },
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
+        appBar: AppBar(
+          title: Text(
+              "${widget.date.year}년 ${widget.date.month}월 ${widget.date.day}일의 일정"),
+          backgroundColor: ColorStyles.themeBlack,
         ),
-      ),
-      body: ListView.builder(
-          itemCount: widget.todoList.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Dismissible(
-                // 삭제 버튼 및 기능 추가
-                key: Key(widget.todoList[index].todoId.toString()),
-                child: Card(
-                    elevation: 4,
-                    margin: EdgeInsets.all(8),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                    child: todoCard(_todoProvider.themeMap, widget.calendar,
-                        widget.todoList, index)
-                    // ListTile(
-                    //   title: Text('hi'),
-                    //   trailing:
-                    //       ),
-                    // )
-                    ));
-          }),
-    );
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AddTodoDialog(widget.calendar.calendarId, widget.date);
+                });
+          },
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+        ),
+        body: Container(
+          color: Color(0xff3E3E3E),
+          child: ListView.builder(
+            itemCount: widget.todoList.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Dismissible(
+                  // 삭제 버튼 및 기능 추가
+                  key: Key(widget.todoList[index].todoId.toString()),
+                  child: Card(
+                      elevation: 4,
+                      margin: EdgeInsets.all(8),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      child: todoCard(_todoProvider.themeMap, widget.calendar,
+                          widget.todoList, index)
+                      // ListTile(
+                      //   title: Text('hi'),
+                      //   trailing:
+                      //       ),
+                      // )
+                      ));
+            },
+          ),
+        ));
   }
 
   Widget todoCard(Map<int, int> themeMap, Calendar calendar,
@@ -204,7 +209,7 @@ class _todolistState extends State<todolist> {
         //     FloatingActionButton(
         //       child: Text('삭제'),
         //       onPressed: () {
-        Navigator.pop(context, "삭제");
+        // Navigator.pop(context, "삭제");
         //         todos.removeAt(index);
         //         //Navigator.pop(context);
         //       },

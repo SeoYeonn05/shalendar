@@ -26,55 +26,94 @@ class AddTodoDialog extends StatelessWidget {
 
   Widget alertDialog(BuildContext context) {
     return AlertDialog(
-      title: Text('일정 생성'),
       content: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
+          SizedBox(
+            child: Text(
+              "일정 추가",
+              style: TextStyle(color: Colors.white),
+            ),
+            width: double.infinity,
+          ),
           TextField(
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 15,
+            ),
             decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Title',
+              labelStyle: TextStyle(
+                fontSize: 15,
+                color: Colors.white,
+              ),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.white),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.white),
+              ),
             ),
             controller: addTodoController,
           )
         ],
       ),
+      backgroundColor: Color(0xff3E3E3E),
       actions: [
         // ok button
-        OutlinedButton(
-            onPressed: () async {
-              // make body
-              Map<String, dynamic> body = <String, dynamic>{};
-              body['title'] = addTodoController.text;
-              body['created_at'] = createdAt.toString();
-              // request url
-              var url = "calendar/$calendarId/todo";
-              // request headers
-              Map<String, String> headers = <String, String>{};
-              String? token = await userController.getToken() as String;
-              headers['token'] = token;
-              // send request
-              var result =
-                  await networkHelper.postWithHeaders(url, headers, body);
+        Center(
+          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            OutlinedButton(
+                onPressed: () async {
+                  // make body
+                  Map<String, dynamic> body = <String, dynamic>{};
+                  body['title'] = addTodoController.text;
+                  body['created_at'] = createdAt.toString();
+                  // request url
+                  var url = "calendar/$calendarId/todo";
+                  // request headers
+                  Map<String, String> headers = <String, String>{};
+                  String? token = await userController.getToken() as String;
+                  headers['token'] = token;
+                  // send request
+                  var result =
+                      await networkHelper.postWithHeaders(url, headers, body);
 
-              // if response is not null
-              if (result != null) {
-                // get changed todo id
-                var insertId = ResponseWithResultId.fromJson(result).insertId;
-                // 수정 이후에 할 일
-                // todo 수정하고 수정한 todo로 이동?
-                print('todo 생성 완료');
-                Navigator.of(context).pop();
-                showSnackBar(context, 'todo 생성 완료');
-              } else {
-                Navigator.of(context).pop();
-                showSnackBar(context, 'todo 생성에 실패했습니다');
-              }
-            },
-            child: Text('ok')),
-        // cancel
-        OutlinedButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text('cancel')),
+                  // if response is not null
+                  if (result != null) {
+                    // get changed todo id
+                    var insertId =
+                        ResponseWithResultId.fromJson(result).insertId;
+                    // 수정 이후에 할 일
+                    // todo 수정하고 수정한 todo로 이동?
+                    print('todo 생성 완료');
+                    Navigator.of(context).pop();
+                    showSnackBar(context, 'todo 생성 완료');
+                  } else {
+                    Navigator.of(context).pop();
+                    showSnackBar(context, 'todo 생성에 실패했습니다');
+                  }
+                },
+                child: Text(
+                  'OK',
+                  style: TextStyle(
+                    color: Colors.white,
+                    decoration: TextDecoration.underline,
+                  ),
+                )),
+            SizedBox(width: 30),
+            // cancel
+            OutlinedButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    color: Colors.white,
+                    decoration: TextDecoration.underline,
+                  ),
+                )),
+          ]),
+        ),
       ],
     );
   }

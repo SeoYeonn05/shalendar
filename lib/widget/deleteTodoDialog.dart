@@ -27,52 +27,79 @@ class DeleteTodoDialog extends StatelessWidget {
 
   Widget alertDialog(BuildContext context) {
     return AlertDialog(
-      title: Text('일정 삭제'),
-      content: Center(
-        child: Text('선택한 일정을 삭제하시겠습니까?'),
+      title: Text(
+        '일정 삭제',
+        style: TextStyle(color: Colors.white),
       ),
+      content: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '선택한 일정을 삭제하시겠습니까?',
+              style: TextStyle(color: Colors.white),
+            ),
+          ]),
+      backgroundColor: Color(0xff3E3E3E),
       actions: [
         // ok button
-        OutlinedButton(
-          child: Text('ok'),
-          onPressed: () async {
-            // request url
-            var url = "todo/$todoId";
-            // request headers
-            Map<String, String> headers = <String, String>{};
-            String? token = await userController.getToken() as String;
-            headers['token'] = token;
-            // send request
-            var result =
-                await networkHelper.deleteWithOnlyHeaders(url, headers);
-            print(result);
-            // if response is not null
-            if (result != null) {
-              // get result
-              var parsedResult = ResponseWithResultId.fromJson(result).result;
-              // 수정 이후에 할 일
-              // todo 수정하고 수정한 todo로 이동?
-              if (parsedResult == "ok") {
-                print('todo 삭제 완료');
-                Navigator.of(context).pop();
-                todoList.removeAt(index);
-                showSnackBar(context, 'todo 삭제 완료');
-                // Get.to(Todo());
+        Center(
+            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          OutlinedButton(
+            child: Text(
+              'OK',
+              style: TextStyle(
+                color: Colors.white,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+            onPressed: () async {
+              // request url
+              var url = "todo/$todoId";
+              // request headers
+              Map<String, String> headers = <String, String>{};
+              String? token = await userController.getToken() as String;
+              headers['token'] = token;
+              // send request
+              var result =
+                  await networkHelper.deleteWithOnlyHeaders(url, headers);
+              print(result);
+              // if response is not null
+              if (result != null) {
+                // get result
+                var parsedResult = ResponseWithResultId.fromJson(result).result;
+                // 수정 이후에 할 일
+                // todo 수정하고 수정한 todo로 이동?
+                if (parsedResult == "ok") {
+                  print('todo 삭제 완료');
+                  Navigator.of(context).pop();
+                  todoList.removeAt(index);
+                  showSnackBar(context, 'todo 삭제 완료');
+                  // Get.to(Todo());
+                } else {
+                  Navigator.of(context).pop();
+                  showSnackBar(context, 'todo 삭제에 실패했습니다.');
+                }
               } else {
                 Navigator.of(context).pop();
                 showSnackBar(context, 'todo 삭제에 실패했습니다.');
               }
-            } else {
-              Navigator.of(context).pop();
-              showSnackBar(context, 'todo 삭제에 실패했습니다.');
-            }
-          },
-        ),
-        // cancel
-        OutlinedButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text('cancel'),
-        ),
+            },
+          ),
+          SizedBox(width: 30),
+
+          // cancel
+          OutlinedButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                color: Colors.white,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ),
+        ]))
       ],
     );
   }
