@@ -15,11 +15,11 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDate;
-
+  DateTime _now = DateTime.now();
   Map<String, List> mySelectedEvents = {};
 
   final titleController = TextEditingController();
-  final descpController = TextEditingController();
+//  final descpController = TextEditingController();
 
   @override
   void initState() {
@@ -56,11 +56,11 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 labelText: 'Title',
               ),
             ),
-            TextField(
+            /*TextField(
               controller: descpController,
               textCapitalization: TextCapitalization.words,
               decoration: const InputDecoration(labelText: 'Description'),
-            ),
+            ),*/
           ],
         ),
         actions: [
@@ -71,8 +71,8 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
           TextButton(
             child: const Text('Add Event'),
             onPressed: () {
-              if (titleController.text.isEmpty &&
-                  descpController.text.isEmpty) {
+              if (titleController.text.isEmpty 
+                 /* descpController.text.isEmpty*/) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Required title and description'),
@@ -83,7 +83,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 return;
               } else {
                 print(titleController.text);
-                print(descpController.text);
+                //print(descpController.text);
 
                 setState(() {
                   if (mySelectedEvents[
@@ -93,14 +93,14 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                             DateFormat('yyyy-MM-dd').format(_selectedDate!)]
                         ?.add({
                       "eventTitle": titleController.text,
-                      "eventDescp": descpController.text,
+                     // "eventDescp": descpController.text,
                     });
                   } else {
                     mySelectedEvents[
                         DateFormat('yyyy-MM-dd').format(_selectedDate!)] = [
                       {
                         "eventTitle": titleController.text,
-                        "eventDescp": descpController.text,
+                       // "eventDescp": descpController.text,
                       }
                     ];
                   }
@@ -109,7 +109,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 print(
                     "New Event for backend developer ${json.encode(mySelectedEvents)}");
                 titleController.clear();
-                descpController.clear();
+                //descpController.clear();
                 Navigator.pop(context);
                 return;
               }
@@ -200,7 +200,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 ),
               ),
             ),
-            ..._listOfDayEvents(_selectedDate!).map(
+            ..._listOfDayEvents(_now!).map(
               (myEvents) => ListTile(
                 leading: const Icon(
                   Icons.done,
@@ -208,9 +208,9 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 ),
                 title: Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Text('Event Title:   ${myEvents['eventTitle']}'),
+                  child: Text('오늘의 일정 :   ${myEvents['eventTitle']}'),
                 ),
-                subtitle: Text('Description:   ${myEvents['eventDescp']}'),
+                //subtitle: Text('Description:   ${myEvents['eventDescp']}'),
               ),
             ),
           ],
