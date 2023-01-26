@@ -46,6 +46,39 @@ class TodoProvider extends ChangeNotifier {
     }
   }
 
+  Future getTodoListByCalendar(int calendarId) async {
+    final NetworkHelper networkHelper = Get.put(NetworkHelper());
+    final UserController userController = Get.put(UserController());
+    try {
+      todoList?.clear();
+      themeMap.clear();
+      String requestUrl = "calendar/$calendarId/todo";
+      Map<String, String> headers = <String, String>{};
+      headers['token'] = (await userController.getToken())!;
+      Map<String, Object?> body =
+          await networkHelper.getWithHeaders(requestUrl, headers);
+      Object? todos = body['todos'];
+      todos = todos as List;
+      for (var todo in todos) {
+        Map<String, dynamic> tmp = todo;
+        Todo newTodo = Todo(
+          todoId: tmp['todo_id'],
+          title: tmp['title'],
+          createdAt: DateTime.parse(tmp['created_at']),
+          calendarId: tmp['calendar_id'].toString(),
+          isComplete: (tmp['isComplete'] == 1),
+        );
+        todoList?.add(newTodo);
+        themeMap[tmp['calendar_id']] =
+            await userController.getTheme(tmp['calendar_id']);
+      }
+      notifyListeners();
+    } catch (e) {
+      logger.d(e);
+      return null;
+    }
+  }
+
   Future changeTodoCompleteState(int todoId) async {
     final NetworkHelper networkHelper = Get.put(NetworkHelper());
     final UserController userController = Get.put(UserController());

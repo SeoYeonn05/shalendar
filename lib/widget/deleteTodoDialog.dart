@@ -13,7 +13,9 @@ import 'package:shalendar/utils/snackbar.dart';
  */
 class DeleteTodoDialog extends StatelessWidget {
   var todoId;
-  DeleteTodoDialog(this.todoId, {super.key});
+  var todoList;
+  var index;
+  DeleteTodoDialog(this.todoId, this.todoList, this.index, {super.key});
 
   final changeTodoController = TextEditingController();
   final NetworkHelper networkHelper = NetworkHelper();
@@ -53,6 +55,7 @@ class DeleteTodoDialog extends StatelessWidget {
               if (parsedResult == "ok") {
                 print('todo 삭제 완료');
                 Navigator.of(context).pop();
+                todoList.removeAt(index);
                 showSnackBar(context, 'todo 삭제 완료');
                 // Get.to(Todo());
               } else {

@@ -3,6 +3,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:shalendar/controller/user_controller.dart';
+import 'package:shalendar/provider/Todo_provider.dart';
 import 'package:shalendar/screen/calendarScreen.dart';
 import 'package:shalendar/theme/color.dart';
 
@@ -120,7 +121,14 @@ class _HomeState extends State<Home> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (b) => EventCalendarScreen(calendar)),
+                    builder: (b) => MultiProvider(
+                      providers: [
+                        ChangeNotifierProvider(
+                            create: (context) => TodoProvider()),
+                      ],
+                      child: EventCalendarScreen(calendar),
+                    ),
+                  ),
                 );
               },
               child: Stack(fit: StackFit.expand, children: <Widget>[

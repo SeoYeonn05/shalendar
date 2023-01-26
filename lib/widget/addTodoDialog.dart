@@ -12,7 +12,8 @@ import 'package:shalendar/utils/snackbar.dart';
  */
 class AddTodoDialog extends StatelessWidget {
   var calendarId;
-  AddTodoDialog(this.calendarId, {super.key});
+  var createdAt;
+  AddTodoDialog(this.calendarId, this.createdAt, {super.key});
 
   final addTodoController = TextEditingController();
   final NetworkHelper networkHelper = NetworkHelper();
@@ -44,6 +45,7 @@ class AddTodoDialog extends StatelessWidget {
               // make body
               Map<String, dynamic> body = <String, dynamic>{};
               body['title'] = addTodoController.text;
+              body['created_at'] = createdAt.toString();
               // request url
               var url = "calendar/$calendarId/todo";
               // request headers
