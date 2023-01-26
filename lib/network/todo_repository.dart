@@ -47,11 +47,11 @@ class TodoRepository extends GetConnect {
     return (response.statusCode == 200) ? response.body : null;
   }
 
-  Future<Map?> deleteCalendartUser(String calendarId) async {
+  Future<Map?> unsharedCalendar(String calendarId) async {
     String? token = await userController.getToken();
     if (token == null) return null;
-    Response response = await delete(
-      "/calendar/${calendarId}",
+    Response response = await get(
+      "/api/calendar/${calendarId}/unshare",
       headers: {'token': token!},
     );
     return (response.statusCode == 200) ? response.body : null;
