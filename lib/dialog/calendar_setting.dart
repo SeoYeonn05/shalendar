@@ -1,69 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:shalendar/data/calendar.dart';
 import 'package:shalendar/provider/home_provider.dart';
 
+import '../controller/todo_controller.dart';
 import '../controller/user_controller.dart';
 import '../data/ResponseUserPost.dart';
 import '../network/network_helper.dart';
 import '../theme/color.dart';
 import '../utils/snackbar.dart';
 
-void dialog(BuildContext context, int type, HomeProvider _homeProvider) async {
-  (type == 1)
-      ? addCalendarDialog(context, _homeProvider)
-      : joinCalendarDialog(context, _homeProvider);
-}
+String color = "";
+String joinCode = "";
 
-// 기본값 themeYellow
-String? color = ColorStyles.themeYellow.value.toString();
+/// 참가 코드 복사 버튼을 눌렀을 때, 코드를 클립보드에 저장
+void joinCodeCopy(BuildContext context, String code) async {
+  Clipboard.setData(ClipboardData(text: code));
+  showSnackBar(context, "참가 코드가 복사되었습니다.");
+  return;
+}
 
 // 캘린더 추가 다이얼로그에서 ok 클릭 시
-void addCalendar(
-    BuildContext context, String? name, HomeProvider _homeProvider) async {
+void settingComplete(BuildContext context, Calendar calendar) async {
   final userController = Get.put(UserController());
-  final _networkHelper = NetworkHelper();
+  final todoController = Get.put(TodoController());
 
-  if (name == null || name!.trim().isEmpty) {
-    showSnackBar(context, "캘린더 이름을 입력하세요.");
-    return;
-  }
-  print("캘린더 생성 name : $name, color : $color");
-  ResponseUserPost result = await _networkHelper.addCalendar("calendar", name);
-  if (result.result == "ok") {
-    showSnackBar(context, "캘린더 생성 완료.");
-    // 로컬에 테마 저장
-    userController.setTheme(result.insertId!, color);
-    print("setTheme 로컬에 저장 key : ${result.insertId}, value : $color");
-  } else {
-    showSnackBar(context, "캘린더 생성 실패.");
-  }
-  _homeProvider.getCalendar();
+  userController.setTheme(int.parse(calendar.calendarId!), color);
+  print("setTheme 로컬에 저장 key : ${calendar.calendarId!}, value : $color");
+  todoController.loadTheme(calendar.calendarId!); // 즉시 반영
 }
 
-// 캘린더 참가 다이얼로그에서 ok 클릭 시
-void joinCalendar(
-    BuildContext context, String? code, HomeProvider _homeProvider) async {
+/// 다이얼로그 출력
+void calendarSettingDialog(BuildContext context, Calendar calendar) async {
+  final todoController = Get.put(TodoController());
   final userController = Get.put(UserController());
-  final _networkHelper = NetworkHelper();
+  bool result = await todoController.getJoinCode(calendar.calendarId!);
+  color = await userController.getTheme(int.parse(calendar.calendarId!));
 
-  if (code == null || code!.trim().isEmpty) {
-    showSnackBar(context, "참가 코드를 입력하세요.");
+  if (todoController.joinCode == null) {
     return;
-  }
-  print("캘린더 참가 code : $code, color : $color");
-  ResponseUserPost result = await _networkHelper.joinCalendar(code);
-  if (result.result == "ok") {
-    showSnackBar(context, "캘린더 참가 완료.");
-    userController.setTheme(result.insertId!, color);
-    print("setTheme 로컬에 저장 key : ${result.insertId}, value : $color");
   } else {
-    showSnackBar(context, result.result);
+    joinCode = todoController.joinCode;
   }
-  _homeProvider.getCalendar();
-}
-
-void addCalendarDialog(BuildContext context, HomeProvider _homeProvider) async {
-  final _textController = TextEditingController();
 
   await showDialog(
       context: context,
@@ -81,28 +60,58 @@ void addCalendarDialog(BuildContext context, HomeProvider _homeProvider) async {
                   ),
                   width: double.infinity,
                 ),
-                TextField(
-                  controller: _textController,
-                  keyboardType: TextInputType.multiline,
-                  maxLines: 1,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                  ),
-                  decoration: InputDecoration(
-                    labelStyle: TextStyle(
-                      fontSize: 15,
+                SizedBox(height: 10),
+                SizedBox(
+                  child: Text(
+                    "${calendar.calendarName}",
+                    style: TextStyle(
                       color: Colors.white,
-                    ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
+                      fontSize: 20,
                     ),
                   ),
+                  width: double.infinity,
                 ),
                 SizedBox(height: 15),
+                SizedBox(
+                  child: Text(
+                    "참가 코드",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  width: double.infinity,
+                ),
+                SizedBox(height: 10),
+                SizedBox(
+                  child: SingleChildScrollView(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "${joinCode}",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                            ),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            joinCodeCopy(context, joinCode);
+                          },
+                          child: Text(
+                            "복사",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  width: double.infinity,
+                ),
+                SizedBox(height: 10),
+                Divider(),
                 SizedBox(
                   child: Text(
                     "테마 설정",
@@ -134,100 +143,7 @@ void addCalendarDialog(BuildContext context, HomeProvider _homeProvider) async {
                   SizedBox(width: 30),
                   TextButton(
                     onPressed: () {
-                      addCalendar(context, _textController.text, _homeProvider);
-                      Navigator.pop(context, 'OK');
-                    },
-                    child: Text(
-                      'OK',
-                      style: TextStyle(
-                        color: Colors.white,
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
-        );
-      });
-}
-
-void joinCalendarDialog(
-    BuildContext context, HomeProvider _homeProvider) async {
-  final _textController = TextEditingController();
-
-  await showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          content: Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  child: Text(
-                    "참가코드 입력",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  width: double.infinity,
-                ),
-                TextField(
-                  controller: _textController,
-                  keyboardType: TextInputType.multiline,
-                  maxLines: 1,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                  ),
-                  decoration: InputDecoration(
-                    labelStyle: TextStyle(
-                      fontSize: 15,
-                      color: Colors.white,
-                    ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 15),
-                SizedBox(
-                  child: Text(
-                    "테마 설정",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  width: double.infinity,
-                ),
-                SizedBox(height: 15),
-                ThemeButton(),
-              ],
-            ),
-          ),
-          backgroundColor: Color(0xff3E3E3E),
-          actions: [
-            Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, 'Cancel'),
-                    child: Text(
-                      'Cancel',
-                      style: TextStyle(
-                        color: Colors.white,
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 30),
-                  TextButton(
-                    onPressed: () {
-                      joinCalendar(
-                          context, _textController.text, _homeProvider);
+                      settingComplete(context, calendar);
                       Navigator.pop(context, 'OK');
                     },
                     child: Text(

@@ -26,4 +26,14 @@ class TodoRepository extends GetConnect {
     );
     return (response.statusCode == 200) ? response.body : null;
   }
+
+  Future<Map?> getJoinCode(String calendarId) async {
+    String? token = await userController.getToken();
+    if (token == null) return null;
+    Response response = await get(
+      "/api/calendar/${calendarId}/share-key",
+      headers: {'token': token!},
+    );
+    return (response.statusCode == 200) ? response.body : null;
+  }
 }

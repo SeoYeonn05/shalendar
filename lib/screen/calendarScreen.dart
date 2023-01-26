@@ -10,6 +10,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import '../controller/user_controller.dart';
 import '../data/calendar.dart';
+import '../dialog/calendar_setting.dart';
 import '../utils/calendar_event.dart';
 import 'home.dart';
 
@@ -58,6 +59,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
   /// 캘린더 세팅
   void calendarSetting() {
     print("캘린더 세팅 클릭");
+    calendarSettingDialog(context, widget.calendar);
   }
 
   /// 캘린더 해당 날짜로 들어갈 때
