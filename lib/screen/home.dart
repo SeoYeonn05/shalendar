@@ -10,6 +10,7 @@ import '../data/calendar.dart';
 import '../dialog/dialog.dart';
 import '../provider/bottom_nav_provider.dart';
 import '../provider/home_provider.dart';
+import 'calendar.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -24,6 +25,18 @@ class _HomeState extends State<Home> {
   late HomeState state;
   late UserController userController;
 
+  List<Calendar> calList = [
+    Calendar(calendarId: "우왕", calendarName: "이번주 할 일",
+        createdAt: DateTime(2022, 2, 1, 0, 0, 14, 0, 35), userConnId: 1),
+    Calendar(calendarId: "우왕", calendarName: "이번주 할 일",
+        createdAt: DateTime(2022, 2, 1, 0, 0, 14, 0, 35), userConnId: 1),
+    Calendar(calendarId: "우왕", calendarName: "이번주 할 일",
+        createdAt: DateTime(2022, 2, 1, 0, 0, 14, 0, 35), userConnId: 1),
+    Calendar(calendarId: "우왕", calendarName: "이번주 할 일",
+        createdAt: DateTime(2022, 2, 1, 0, 0, 14, 0, 35), userConnId: 1)
+  ];
+
+
   @override
   initState() {
     super.initState();
@@ -36,6 +49,7 @@ class _HomeState extends State<Home> {
     _homeProvider = Provider.of<HomeProvider>(context);
     _bottomNavigationProvider = Provider.of<BottomNavigationProvider>(context);
     state = _homeProvider.state;
+
 
     return Scaffold(
         floatingActionButton: floatingButtons(),
@@ -76,13 +90,13 @@ class _HomeState extends State<Home> {
   }
 
   Widget messageWidget(String message) => Container(
-        height: 100,
-        alignment: Alignment.center,
-        child: Text(
-          message,
-          style: const TextStyle(fontSize: 30),
-        ),
-      );
+    height: 100,
+    alignment: Alignment.center,
+    child: Text(
+      message,
+      style: const TextStyle(fontSize: 30),
+    ),
+  );
 
   Widget listCard(Calendar calendar, Map<int, int> themeMap) => Container(
       child: Card(
@@ -94,6 +108,10 @@ class _HomeState extends State<Home> {
           child: InkWell(
               onTap: () {
                 // 네비게이터로 이동
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const EventCalendarScreen())
+                );
                 print('clicked ${calendar.calendarName}');
               },
               child: Stack(fit: StackFit.expand, children: <Widget>[
@@ -108,12 +126,19 @@ class _HomeState extends State<Home> {
                     color: Color(
                         themeMap[int.parse(calendar.calendarId ?? '0')] ??
                             4294311867),
-                    child: Text("${calendar.calendarName!}  ",
-                        style: const TextStyle(
-                            fontFamily: 'Pretendard',
-                            fontSize: 16,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w600))),
+                    child: Column(
+                      children: [
+                        Text("${calendar.calendarName!}  ",
+                            style: const TextStyle(
+                                fontFamily: 'Pretendard',
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600)),
+                        Text("achieveRate%"),
+                        Text("정서연 외 11명")
+                      ],
+                    )
+                ),
               ]))));
   Color selectColor(Map<int, int> themeColor, int calendarId) {
     return Color(themeColor[calendarId] ?? 0);
