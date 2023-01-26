@@ -166,7 +166,6 @@ class NetworkHelper {
     };
 
     var url = Uri.http(baseUrl, requestUrl, queryParameters);
-    print(url);
     Map<String, String> header = {'Accept': 'application/json', 'token': token};
     http.Response response = await http.post(url, headers: header);
     logger.d(response.body);

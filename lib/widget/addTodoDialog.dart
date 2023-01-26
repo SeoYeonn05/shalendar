@@ -92,6 +92,7 @@ class AddTodoDialog extends StatelessWidget {
                     print('todo 생성 완료');
                     Navigator.of(context).pop();
                     todoController.todoIndex(calendarId);
+                    todoController.todoDayIndex(calendarId, createdAt);
                     showSnackBar(context, 'todo 생성 완료');
                   } else {
                     Navigator.of(context).pop();

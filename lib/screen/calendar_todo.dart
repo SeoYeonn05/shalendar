@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:shalendar/data/calendar.dart';
 import 'package:shalendar/data/todo.dart';
@@ -8,9 +9,10 @@ import 'package:shalendar/utils/snackbar.dart';
 import 'package:shalendar/widget/addTodoDialog.dart';
 import 'package:shalendar/widget/deleteTodoDialog.dart';
 
+import '../controller/todo_controller.dart';
+
 class todolist extends StatefulWidget {
   Calendar calendar;
-  late List<Todo> todoList = [];
   DateTime date;
   todolist(this.date, this.calendar, {super.key});
 
@@ -21,18 +23,19 @@ class todolist extends StatefulWidget {
 class _todolistState extends State<todolist> {
   String input = "";
   late TodoProvider _todoProvider;
+  final todoController = Get.put(TodoController());
 
   @override
   void initState() {
     super.initState();
     Provider.of<TodoProvider>(context, listen: false).getTodoListByCalendar(
         int.parse(widget.calendar.calendarId!), widget.date);
+    todoController.todoDayIndex(widget.calendar.calendarId!, widget.date);
   }
 
   @override
   Widget build(BuildContext context) {
     _todoProvider = Provider.of<TodoProvider>(context);
-    widget.todoList = Provider.of<TodoProvider>(context).todoList!;
 
     return Scaffold(
         appBar: AppBar(
@@ -54,35 +57,37 @@ class _todolistState extends State<todolist> {
             color: Colors.white,
           ),
         ),
-        body: Container(
-          color: Color(0xff3E3E3E),
-          child: ListView.builder(
-            itemCount: widget.todoList.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Dismissible(
-                  // 삭제 버튼 및 기능 추가
-                  key: Key(widget.todoList[index].todoId.toString()),
-                  child: Card(
-                      elevation: 4,
-                      margin: EdgeInsets.all(8),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      child: todoCard(_todoProvider.themeMap, widget.calendar,
-                          widget.todoList, index)
-                      // ListTile(
-                      //   title: Text('hi'),
-                      //   trailing:
-                      //       ),
-                      // )
-                      ));
-            },
-          ),
-        ));
+        body: GetBuilder<TodoController>(builder: (c) {
+          return Container(
+            color: Color(0xff3E3E3E),
+            child: ListView.builder(
+              itemCount: c.todoDayList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Dismissible(
+                    // 삭제 버튼 및 기능 추가
+                    key: Key(c.todoDayList[index].todoId.toString()),
+                    child: Card(
+                        elevation: 4,
+                        margin: EdgeInsets.all(8),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        child: todoCard(_todoProvider.themeMap, widget.calendar,
+                            c.todoDayList, index)
+                        // ListTile(
+                        //   title: Text('hi'),
+                        //   trailing:
+                        //       ),
+                        // )
+                        ));
+              },
+            ),
+          );
+        }));
   }
 
   Widget todoCard(Map<int, int> themeMap, Calendar calendar,
-      List<Todo> todoList, int index) {
-    Todo todo = todoList[index];
+      List<dynamic> todoDayList, int index) {
+    Todo todo = todoDayList[index];
     return InkWell(
       child: Container(
         margin: EdgeInsets.fromLTRB(10, 5, 10, 5),
@@ -224,7 +229,11 @@ class _todolistState extends State<todolist> {
         //   ],
         // );
         return DeleteTodoDialog(
-            widget.todoList[index].todoId, widget.todoList, index);
+            todoController.todoDayList[index].todoId,
+            todoController.todoDayList,
+            index,
+            widget.calendar.calendarId,
+            widget.date);
       },
     );
   }
