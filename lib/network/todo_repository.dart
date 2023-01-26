@@ -47,13 +47,13 @@ class TodoRepository extends GetConnect {
     return (response.statusCode == 200) ? response.body : null;
   }
 
-  // Future<Map?> getCalendartUser(String calendarId) async {
-  //   String? token = await userController.getToken();
-  //   if (token == null) return null;
-  //   Response response = await get(
-  //     "/calendar/${calendarId}/user",
-  //     headers: {'token': token!},
-  //   );
-  //   return (response.statusCode == 200) ? response.body : null;
-  // }
+  Future<Map?> deleteCalendartUser(String calendarId) async {
+    String? token = await userController.getToken();
+    if (token == null) return null;
+    Response response = await delete(
+      "/calendar/${calendarId}",
+      headers: {'token': token!},
+    );
+    return (response.statusCode == 200) ? response.body : null;
+  }
 }
