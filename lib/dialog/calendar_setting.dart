@@ -161,10 +161,9 @@ void calendarSettingDialog(BuildContext context, Calendar calendar) async {
                   TextButton(
                     onPressed: () => askDeleteCalendar(context, calendar),
                     child: Text(
-                      '나가기',
+                      '캘린더 탈퇴',
                       style: TextStyle(
                         color: Color.fromARGB(255, 255, 100, 100),
-                        decoration: TextDecoration.underline,
                       ),
                     ),
                   ),
