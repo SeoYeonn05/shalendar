@@ -44,14 +44,13 @@ class _HomeState extends State<Home> {
         return messageWidget("로딩중");
       } else if (state == HomeState.empty) {
         return messageWidget("캘린더가 존재하지 않습니다");
-      } else if(state == HomeState.calendarCompleted){
+      } else if (state == HomeState.calendarCompleted) {
         _homeProvider.getInform();
-        return messageWidget("장보를 불러오는 중입니다");
-      } else if(state == HomeState.infoCompleted){
+        return messageWidget("정보를 불러오는 중입니다");
+      } else if (state == HomeState.infoCompleted) {
         _homeProvider.getAchievementRate();
-        return messageWidget("장보를 불러오는 중입니다");
-      }
-      else{
+        return messageWidget("정보를 불러오는 중입니다");
+      } else {
         final calendarList = _homeProvider.calendarList;
         final themeMap = _homeProvider.themeMap;
         late Map<String, String> calUserName = _homeProvider.calUserName;
@@ -62,8 +61,12 @@ class _HomeState extends State<Home> {
               child: GridView.builder(
                   scrollDirection: Axis.vertical,
                   itemCount: calendarList.length,
-                  itemBuilder: (BuildContext context, index) =>
-                      listCard(calendarList[index], themeMap, calUserName, calUserCount, completeRate),
+                  itemBuilder: (BuildContext context, index) => listCard(
+                      calendarList[index],
+                      themeMap,
+                      calUserName,
+                      calUserCount,
+                      completeRate),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       childAspectRatio: 4 / 3,
@@ -89,8 +92,6 @@ class _HomeState extends State<Home> {
             )));
   }
 
-
-
   Widget messageWidget(String message) => Container(
         height: 100,
         alignment: Alignment.center,
@@ -101,85 +102,81 @@ class _HomeState extends State<Home> {
       );
 
   Widget listCard(
-      Calendar calendar,
-      Map<int, int> themeMap,
-      Map<String, String> userName,
-      Map<String, int> count,
-      Map<String, double> completeRate) =>
+          Calendar calendar,
+          Map<int, int> themeMap,
+          Map<String, String> userName,
+          Map<String, int> count,
+          Map<String, double> completeRate) =>
       Container(
-      child: Card(
-          semanticContainer: true,
-          clipBehavior: Clip.antiAliasWithSaveLayer,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: InkWell(
-              onTap: () {
-                print('clicked ${calendar.calendarName}');
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (b) => MultiProvider(
-                      providers: [
-                        ChangeNotifierProvider(
-                            create: (context) => TodoProvider()),
-                      ],
-                      child: EventCalendarScreen(calendar),
-                    ),
-                  ),
-                );
-              },
-              child: Stack(fit: StackFit.expand, children: <Widget>[
+          child: Card(
+              semanticContainer: true,
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: InkWell(
+                  onTap: () {
+                    print('clicked ${calendar.calendarName}');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (b) => MultiProvider(
+                          providers: [
+                            ChangeNotifierProvider(
+                                create: (context) => TodoProvider()),
+                          ],
+                          child: EventCalendarScreen(calendar),
+                        ),
+                      ),
+                    );
+                  },
+                  child: Stack(fit: StackFit.expand, children: <Widget>[
 /*                Image.asset(
                   route.image!,
                   fit: BoxFit.fill,
                 ),*/
-                /// 테마에 따른 색상
-                Container(
-                    //alignment: Alignment.bottomRight,
-                    padding: EdgeInsets.all(10),
-                    color: Color(
-                        themeMap[int.parse(calendar.calendarId ?? '0')] ??
-                            4294311867),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("${calendar.calendarName!}  ",
-                            style: const TextStyle(
-                                fontFamily: 'Pretendard',
-                                fontSize: 18,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600)),
-                        const SizedBox(height: 10),
-                        Row(
+                    /// 테마에 따른 색상
+                    Container(
+                        //alignment: Alignment.bottomRight,
+                        padding: EdgeInsets.all(10),
+                        color: Color(
+                            themeMap[int.parse(calendar.calendarId ?? '0')] ??
+                                4294311867),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Flexible(
-                                fit: FlexFit.loose,
-                                child: SizedBox(
-                                    width: 200
-                                )),
-                            Text("${completeRate[calendar.calendarId]?.toInt()}%") /*${_homeProvider.completeTodoRate[calendar.calendarId]}*/
+                            Text("${calendar.calendarName!}  ",
+                                style: const TextStyle(
+                                    fontFamily: 'Pretendard',
+                                    fontSize: 18,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600)),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                const Flexible(
+                                    fit: FlexFit.loose,
+                                    child: SizedBox(width: 200)),
+                                Text(
+                                    "${completeRate[calendar.calendarId]?.toInt()}%") /*${_homeProvider.completeTodoRate[calendar.calendarId]}*/
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                const Flexible(
+                                    fit: FlexFit.loose,
+                                    child: SizedBox(width: 50)),
+                                Text(
+                                    "${userName[calendar.calendarId]} 외 ${count[calendar.calendarId]}명")
+                              ],
+                            )
                           ],
-                        ),
-                        Row(
-                          children: [
-                            const Flexible(
-                                fit: FlexFit.loose,
-                                child: SizedBox(
-                                    width: 50
-                                )),
-                            Text("${userName[calendar.calendarId]} 외 ${count[calendar.calendarId]}명")
-                          ],
-                        )
-                      ],
-                    )),
-              ]))));
+                        )),
+                  ]))));
   Color selectColor(Map<int, int> themeColor, int calendarId) {
     return Color(themeColor[calendarId] ?? 0);
   }
-
-
 
   Widget? floatingButtons() {
     return SpeedDial(
