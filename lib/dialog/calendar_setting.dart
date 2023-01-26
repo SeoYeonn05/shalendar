@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:shalendar/data/calendar.dart';
 import 'package:shalendar/provider/home_provider.dart';
+import 'package:shalendar/screen/loading.dart';
 
 import '../controller/todo_controller.dart';
 import '../controller/user_controller.dart';
@@ -42,7 +43,7 @@ void calendarSettingDialog(BuildContext context, Calendar calendar) async {
   // 저장된 테마색 불러오기
   color = await userController.getTheme(int.parse(calendar.calendarId!));
   // 캘린더에 참여하고 있는 유저 목록 불러오기
-  bool result = await todoController.geCalendartUser(calendar.calendarId!);
+  bool result = await todoController.getCalendartUser(calendar.calendarId!);
 
   if (todoController.joinCode == null) {
     return;
@@ -158,6 +159,85 @@ void calendarSettingDialog(BuildContext context, Calendar calendar) async {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextButton(
+                    onPressed: () => askDeleteCalendar(context),
+                    child: Text(
+                      '나가기',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 255, 100, 100),
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 30),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'Cancel'),
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(
+                        color: Colors.white,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 20),
+                  TextButton(
+                    onPressed: () {
+                      settingComplete(context, calendar);
+                      Navigator.pop(context, 'OK');
+                    },
+                    child: Text(
+                      'OK',
+                      style: TextStyle(
+                        color: Colors.white,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        );
+      });
+}
+
+/// 회원탈퇴 버튼 눌렀을 때
+void deleteCalendar(BuildContext context) async {
+  showSnackBar(context, "캘린더 그룹에서 나가셨습니다.");
+  Navigator.pushAndRemoveUntil(
+      context, MaterialPageRoute(builder: (b) => Loading()), (route) => false);
+}
+
+void askDeleteCalendar(BuildContext context) async {
+  await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(
+            "캘린더 탈퇴",
+            style: TextStyle(color: Color.fromARGB(255, 255, 100, 100)),
+          ),
+          content: Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  child: Text(
+                    "캘린더 그룹을 나가시겠습니까?",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          backgroundColor: Color(0xff3E3E3E),
+          actions: [
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
                     onPressed: () => Navigator.pop(context, 'Cancel'),
                     child: Text(
                       'Cancel',
@@ -169,10 +249,7 @@ void calendarSettingDialog(BuildContext context, Calendar calendar) async {
                   ),
                   SizedBox(width: 30),
                   TextButton(
-                    onPressed: () {
-                      settingComplete(context, calendar);
-                      Navigator.pop(context, 'OK');
-                    },
+                    onPressed: () => deleteCalendar(context),
                     child: Text(
                       'OK',
                       style: TextStyle(

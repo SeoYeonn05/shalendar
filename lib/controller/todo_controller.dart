@@ -44,8 +44,8 @@ class TodoController extends GetxController {
     return true;
   }
 
-  Future<bool> geCalendartUser(String calendarId) async {
-    Map? body = await todoRepo.geCalendartUser(calendarId);
+  Future<bool> getCalendartUser(String calendarId) async {
+    Map? body = await todoRepo.getCalendartUser(calendarId);
     if (body == null) {
       return false;
     }
