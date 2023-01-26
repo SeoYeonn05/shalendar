@@ -53,4 +53,12 @@ class TodoController extends GetxController {
     update();
     return true;
   }
+
+  Future<bool> deleteCalendartUser(String calendarId) async {
+    Map? body = await todoRepo.deleteCalendartUser(calendarId);
+    if (body == null) {
+      return false;
+    }
+    return true;
+  }
 }

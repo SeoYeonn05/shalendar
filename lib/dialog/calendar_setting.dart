@@ -159,7 +159,7 @@ void calendarSettingDialog(BuildContext context, Calendar calendar) async {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextButton(
-                    onPressed: () => askDeleteCalendar(context),
+                    onPressed: () => askDeleteCalendar(context, calendar),
                     child: Text(
                       '나가기',
                       style: TextStyle(
@@ -202,13 +202,25 @@ void calendarSettingDialog(BuildContext context, Calendar calendar) async {
 }
 
 /// 회원탈퇴 버튼 눌렀을 때
-void deleteCalendar(BuildContext context) async {
-  showSnackBar(context, "캘린더 그룹에서 나가셨습니다.");
-  Navigator.pushAndRemoveUntil(
-      context, MaterialPageRoute(builder: (b) => Loading()), (route) => false);
+void deleteCalendar(BuildContext context, Calendar calendar) async {
+  final todoController = Get.put(TodoController());
+  final userController = Get.put(UserController());
+
+  // 삭제 통신
+  bool result = await todoController.deleteCalendartUser(calendar.calendarId!);
+
+  // 성공시 화면 이동, 스낵바 출력, 로컬에 데이터 삭제
+  if (result) {
+    showSnackBar(context, "캘린더 그룹에서 나가셨습니다.");
+    userController.deleteTheme(int.parse(calendar.calendarId!));
+    Navigator.pushAndRemoveUntil(context,
+        MaterialPageRoute(builder: (b) => Loading()), (route) => false);
+  } else {
+    showSnackBar(context, "오류가 발생하였습니다.");
+  }
 }
 
-void askDeleteCalendar(BuildContext context) async {
+void askDeleteCalendar(BuildContext context, Calendar calendar) async {
   await showDialog(
       context: context,
       builder: (context) {
@@ -249,7 +261,7 @@ void askDeleteCalendar(BuildContext context) async {
                   ),
                   SizedBox(width: 30),
                   TextButton(
-                    onPressed: () => deleteCalendar(context),
+                    onPressed: () => deleteCalendar(context, calendar),
                     child: Text(
                       'OK',
                       style: TextStyle(
