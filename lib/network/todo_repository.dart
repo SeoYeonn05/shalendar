@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import 'package:shalendar/controller/user_controller.dart';
 
 class TodoRepository extends GetConnect {
   final userController = Get.put(UserController());
+  var logger = Logger(printer: PrettyPrinter());
 
   @override
   void onInit() {
@@ -24,6 +26,7 @@ class TodoRepository extends GetConnect {
       "/calendar/${calendarId}/todo",
       headers: {'token': token!},
     );
+    logger.d(response);
     return (response.statusCode == 200) ? response.body : null;
   }
 
@@ -34,6 +37,7 @@ class TodoRepository extends GetConnect {
       "/api/calendar/${calendarId}/share-key",
       headers: {'token': token!},
     );
+    logger.d(response);
     return (response.statusCode == 200) ? response.body : null;
   }
 
@@ -44,6 +48,7 @@ class TodoRepository extends GetConnect {
       "/calendar/${calendarId}/user",
       headers: {'token': token!},
     );
+    logger.d(response);
     return (response.statusCode == 200) ? response.body : null;
   }
 
@@ -54,6 +59,7 @@ class TodoRepository extends GetConnect {
       "/api/calendar/${calendarId}/unshare",
       headers: {'token': token!},
     );
+    logger.d(response);
     return (response.statusCode == 200) ? response.body : null;
   }
 }
