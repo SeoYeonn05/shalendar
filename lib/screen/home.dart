@@ -1,16 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:shalendar/controller/user_controller.dart';
+import 'package:shalendar/screen/calendarScreen.dart';
 import 'package:shalendar/theme/color.dart';
 
 import '../data/calendar.dart';
 import '../dialog/dialog.dart';
 import '../provider/bottom_nav_provider.dart';
 import '../provider/home_provider.dart';
-import 'calendar.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -26,16 +25,27 @@ class _HomeState extends State<Home> {
   late UserController userController;
 
   List<Calendar> calList = [
-    Calendar(calendarId: "우왕", calendarName: "이번주 할 일",
-        createdAt: DateTime(2022, 2, 1, 0, 0, 14, 0, 35), userConnId: 1),
-    Calendar(calendarId: "우왕", calendarName: "이번주 할 일",
-        createdAt: DateTime(2022, 2, 1, 0, 0, 14, 0, 35), userConnId: 1),
-    Calendar(calendarId: "우왕", calendarName: "이번주 할 일",
-        createdAt: DateTime(2022, 2, 1, 0, 0, 14, 0, 35), userConnId: 1),
-    Calendar(calendarId: "우왕", calendarName: "이번주 할 일",
-        createdAt: DateTime(2022, 2, 1, 0, 0, 14, 0, 35), userConnId: 1)
+    Calendar(
+        calendarId: "우왕",
+        calendarName: "이번주 할 일",
+        createdAt: DateTime(2022, 2, 1, 0, 0, 14, 0, 35),
+        userConnId: 1),
+    Calendar(
+        calendarId: "우왕",
+        calendarName: "이번주 할 일",
+        createdAt: DateTime(2022, 2, 1, 0, 0, 14, 0, 35),
+        userConnId: 1),
+    Calendar(
+        calendarId: "우왕",
+        calendarName: "이번주 할 일",
+        createdAt: DateTime(2022, 2, 1, 0, 0, 14, 0, 35),
+        userConnId: 1),
+    Calendar(
+        calendarId: "우왕",
+        calendarName: "이번주 할 일",
+        createdAt: DateTime(2022, 2, 1, 0, 0, 14, 0, 35),
+        userConnId: 1)
   ];
-
 
   @override
   initState() {
@@ -50,7 +60,6 @@ class _HomeState extends State<Home> {
     _bottomNavigationProvider = Provider.of<BottomNavigationProvider>(context);
     state = _homeProvider.state;
 
-
     return Scaffold(
         floatingActionButton: floatingButtons(),
         body: Container(
@@ -59,7 +68,7 @@ class _HomeState extends State<Home> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                SizedBox(height:15),
+                SizedBox(height: 15),
                 routeListWidget(),
               ],
             )));
@@ -92,13 +101,13 @@ class _HomeState extends State<Home> {
   }
 
   Widget messageWidget(String message) => Container(
-    height: 100,
-    alignment: Alignment.center,
-    child: Text(
-      message,
-      style: const TextStyle(fontSize: 30),
-    ),
-  );
+        height: 100,
+        alignment: Alignment.center,
+        child: Text(
+          message,
+          style: const TextStyle(fontSize: 30),
+        ),
+      );
 
   Widget listCard(Calendar calendar, Map<int, int> themeMap) => Container(
       child: Card(
@@ -109,12 +118,12 @@ class _HomeState extends State<Home> {
           ),
           child: InkWell(
               onTap: () {
-                // 네비게이터로 이동
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const EventCalendarScreen())
-                );
                 print('clicked ${calendar.calendarName}');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (b) => EventCalendarScreen(calendar)),
+                );
               },
               child: Stack(fit: StackFit.expand, children: <Widget>[
 /*                Image.asset(
@@ -139,8 +148,7 @@ class _HomeState extends State<Home> {
                         Text("achieveRate%"),
                         Text("정서연 외 11명")
                       ],
-                    )
-                ),
+                    )),
               ]))));
   Color selectColor(Map<int, int> themeColor, int calendarId) {
     return Color(themeColor[calendarId] ?? 0);
