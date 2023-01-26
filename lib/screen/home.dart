@@ -54,10 +54,12 @@ class _HomeState extends State<Home> {
     return Scaffold(
         floatingActionButton: floatingButtons(),
         body: Container(
+            color: ColorStyles.backgroundColor,
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                SizedBox(height:15),
                 routeListWidget(),
               ],
             )));
@@ -149,7 +151,7 @@ class _HomeState extends State<Home> {
       animatedIcon: AnimatedIcons.menu_close,
       visible: true,
       curve: Curves.bounceIn,
-      backgroundColor: const Color.fromARGB(0xFF, 0xFB, 0x95, 0x32),
+      backgroundColor: ColorStyles.appbarColor,
       children: [
         SpeedDialChild(
             child: const Icon(Icons.settings_sharp, color: Colors.white),
@@ -158,8 +160,8 @@ class _HomeState extends State<Home> {
                 fontWeight: FontWeight.w500,
                 color: Colors.white,
                 fontSize: 13.0),
-            backgroundColor: const Color.fromARGB(0xFF, 0xFB, 0x95, 0x32),
-            labelBackgroundColor: const Color.fromARGB(0xFF, 0xFB, 0x95, 0x32),
+            backgroundColor: ColorStyles.appbarColor,
+            labelBackgroundColor: ColorStyles.appbarColor,
             onTap: () {
               dialog(context, 1, _homeProvider);
             }),
@@ -169,8 +171,8 @@ class _HomeState extends State<Home> {
             color: Colors.white,
           ),
           label: "참가",
-          backgroundColor: const Color.fromARGB(0xFF, 0xFB, 0x95, 0x32),
-          labelBackgroundColor: const Color.fromARGB(0xFF, 0xFB, 0x95, 0x32),
+          backgroundColor: ColorStyles.appbarColor,
+          labelBackgroundColor: ColorStyles.appbarColor,
           labelStyle: const TextStyle(
               fontWeight: FontWeight.w500, color: Colors.white, fontSize: 13.0),
           onTap: () {

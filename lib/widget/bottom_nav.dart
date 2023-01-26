@@ -4,6 +4,7 @@ import 'package:shalendar/screen/user_setting.dart';
 import '../provider/bottom_nav_provider.dart';
 import '../screen/home.dart';
 import '../screen/todo.dart';
+import '../theme/color.dart';
 
 class BottomNavigation extends StatelessWidget {
   BottomNavigation({Key? key}) : super(key: key);
@@ -12,8 +13,8 @@ class BottomNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _bottomNavigationProvider = Provider.of<BottomNavigationProvider>(context);
-    const Color unSelected = Color.fromRGBO(63, 66, 72, 1);
-    const Color selected = Color.fromRGBO(204, 210, 223, 1);
+    const Color unSelected = Color.fromRGBO(204, 210, 223, 1);
+    const Color selected = Colors.white;
     const EdgeInsets itemPadding = EdgeInsets.fromLTRB(0, 8, 0, 5);
 
 /*    [
@@ -27,22 +28,22 @@ class BottomNavigation extends StatelessWidget {
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60.0),
+        preferredSize: Size.fromHeight(50.0),
         child: AppBar(
-            shadowColor: const Color.fromRGBO(255, 255, 255, 0.5),
-            backgroundColor: const Color(0xff3E3E3E),
+            backgroundColor: ColorStyles.appbarColor,
             title: Container(
                 width: MediaQuery.of(context).size.width,
                 child: Image.asset(
                   'assets/icons/logo_white.png',
-                  height: 50,
+                  height: 38,
                 )),
+            centerTitle: true,
             elevation: 10,
             actions: <Widget>[
               IconButton(
                 icon: const Icon(
                   Icons.settings,
-                  color: Colors.white,
+                  color: unSelected,
                 ),
                 onPressed: () => {
                   Navigator.push(
@@ -59,7 +60,7 @@ class BottomNavigation extends StatelessWidget {
       ),
       bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
-          backgroundColor: const Color(0xff3E3E3E),
+          backgroundColor: ColorStyles.appbarColor,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Container(
