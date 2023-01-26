@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:provider/provider.dart';
+import 'package:shalendar/provider/Todo_provider.dart';
 import 'package:shalendar/screen/register.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../data/ResponseUserPost.dart';
@@ -61,6 +62,8 @@ class _LoginState extends State<Login> {
                               create: (context) => BottomNavigationProvider()),
                           ChangeNotifierProvider(
                               create: (context) => HomeProvider()),
+                          ChangeNotifierProvider(
+                              create: (context) => TodoProvider()),
                         ], child: BottomNavigation())),
                 (route) => false);
           }

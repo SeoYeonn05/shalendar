@@ -55,7 +55,7 @@ class BottomNavigation extends StatelessWidget {
             ]),
       ),
       body: SafeArea(
-        child: [const Home(), const Todo()]
+        child: [const Home(), const TodoScreen()]
             .elementAt(_bottomNavigationProvider.currentItem),
       ),
       bottomNavigationBar: BottomNavigationBar(
