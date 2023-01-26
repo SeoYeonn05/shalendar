@@ -38,9 +38,10 @@ class _todolistState extends State<todolist> {
         appBar: AppBar(
           title: Text(
               "${widget.date.year}년 ${widget.date.month}월 ${widget.date.day}일의 일정"),
-          backgroundColor: ColorStyles.themeBlack,
+          backgroundColor: ColorStyles.appbarColor,
         ),
         floatingActionButton: FloatingActionButton(
+          backgroundColor: Color(0xff848484),
           onPressed: () {
             showDialog(
                 context: context,

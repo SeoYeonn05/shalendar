@@ -22,18 +22,17 @@ class NetworkHelper {
 
   var logger = Logger(printer: PrettyPrinter());
 
-
   Future getWithHeaders(String requestUrl, Map<String, String> header) async {
     var url = Uri.http(baseUrl, requestUrl);
     var response = await http.get(url, headers: header);
+    logger.d(response);
 
     // 통신이 정상적으로 이루어진 경우 json, 아닐 경우 null
     // 후에 들어온 값이 fail인지는 따로 확인해야 함
     // 400인 경우 오류메시지 출력을 위해 json 넘김
     if (response.statusCode == 200) {
       //로그로 들어온 값 확인하기
-      // logger.d(response.body);
-      // logger.d(response.statusCode);
+      logger.d(response);
 
       return jsonDecode(response.body);
     } else {
@@ -54,7 +53,7 @@ class NetworkHelper {
     http.Response response = await http.get(url, headers: header);
 
     if (response.statusCode == 200) {
-      // logger.d(response.body);
+      logger.d(response.body);
       return ResponseUserGet.fromJson(jsonDecode(response.body)).user;
     } else {
       return null;
@@ -180,5 +179,4 @@ class NetworkHelper {
       return null;
     }
   }
-
 }

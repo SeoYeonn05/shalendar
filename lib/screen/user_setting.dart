@@ -31,6 +31,7 @@ class _User_SettingState extends State<User_Setting> {
   void logout() async {
     final prefs = await SharedPreferences.getInstance();
     final success = await prefs.remove('token');
+    print("로그아웃 버튼 눌림, 앱내에 저장된 토큰 삭제");
 
     Navigator.pushAndRemoveUntil(
         context, MaterialPageRoute(builder: (b) => Login()), (route) => false);
