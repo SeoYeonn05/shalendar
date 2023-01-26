@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:shalendar/provider/Todo_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../provider/bottom_nav_provider.dart';
@@ -52,6 +53,8 @@ class _LoadingState extends State<Loading> {
                           create: (context) => BottomNavigationProvider()),
                       ChangeNotifierProvider(
                           create: (context) => HomeProvider()),
+                      ChangeNotifierProvider(
+                          create: (context) => TodoProvider()),
                     ], child: BottomNavigation())),
             (route) => false);
       } else {

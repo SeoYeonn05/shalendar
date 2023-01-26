@@ -29,7 +29,7 @@ class TodoController extends GetxController {
   }
 
   Future<bool> loadTheme(String calendarId) async {
-    theme = int.parse(await userController.getTheme(int.parse(calendarId)));
+    theme = (await userController.getTheme(int.parse(calendarId)));
     update();
     return true;
   }

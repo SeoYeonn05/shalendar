@@ -42,11 +42,13 @@ class HomeProvider extends ChangeNotifier {
   Future getCalendar() async {
     final NetworkHelper networkHelper = NetworkHelper();
     final UserController userController = Get.put(UserController());
+
     calendarList = [];
     themeMap = <int, int>{};
     try {
       Map<String, String> headers = <String, String>{};
-      headers['token'] = (await userController.getToken())!;
+      var token = (await userController.getToken())!;
+      headers['token'] = token;
       Map<String, Object?> response =
       await networkHelper.getWithHeaders("calendar", headers);
       Object? founded = response['calendars'];
@@ -69,7 +71,7 @@ class HomeProvider extends ChangeNotifier {
 
           calendarList?.add(res);
           themeMap[tmp['calendar_id']] =
-              int.parse(await userController.getTheme(tmp['calendar_id']));
+              await userController.getTheme(tmp['calendar_id']);
           // themeMap![tmp['calendar_id']] = Color(
           //     int.parse(()));
         }

@@ -15,7 +15,7 @@ void dialog(BuildContext context, int type, HomeProvider _homeProvider) async {
 }
 
 // 기본값 themeYellow
-String? color = ColorStyles.themeYellow.value.toString();
+int? color = ColorStyles.themeYellow.value;
 
 // 캘린더 추가 다이얼로그에서 ok 클릭 시
 void addCalendar(
@@ -261,7 +261,7 @@ class ThemeButton extends StatelessWidget {
             width: 28,
             child: ElevatedButton(
               onPressed: () {
-                color = ColorStyles.themeYellow.value.toString();
+                color = ColorStyles.themeYellow.value;
               },
               child: null,
               style: ElevatedButton.styleFrom(
@@ -277,7 +277,7 @@ class ThemeButton extends StatelessWidget {
             width: 28,
             child: ElevatedButton(
               onPressed: () {
-                color = ColorStyles.themeRed.value.toString();
+                color = ColorStyles.themeRed.value;
               },
               child: null,
               style: ElevatedButton.styleFrom(
@@ -293,7 +293,7 @@ class ThemeButton extends StatelessWidget {
             width: 28,
             child: ElevatedButton(
               onPressed: () {
-                color = ColorStyles.themePink.value.toString();
+                color = ColorStyles.themePink.value;
               },
               child: null,
               style: ElevatedButton.styleFrom(
@@ -309,7 +309,7 @@ class ThemeButton extends StatelessWidget {
             width: 28,
             child: ElevatedButton(
               onPressed: () {
-                color = ColorStyles.themeOrange.value.toString();
+                color = ColorStyles.themeOrange.value;
               },
               child: null,
               style: ElevatedButton.styleFrom(
@@ -325,7 +325,7 @@ class ThemeButton extends StatelessWidget {
             width: 28,
             child: ElevatedButton(
               onPressed: () {
-                color = ColorStyles.themeGreen.value.toString();
+                color = ColorStyles.themeGreen.value;
               },
               child: null,
               style: ElevatedButton.styleFrom(
@@ -341,7 +341,7 @@ class ThemeButton extends StatelessWidget {
             width: 28,
             child: ElevatedButton(
               onPressed: () {
-                color = ColorStyles.themeBlue.value.toString();
+                color = ColorStyles.themeBlue.value;
               },
               child: null,
               style: ElevatedButton.styleFrom(
@@ -357,7 +357,7 @@ class ThemeButton extends StatelessWidget {
             width: 28,
             child: ElevatedButton(
               onPressed: () {
-                color = ColorStyles.themeBlack.value.toString();
+                color = ColorStyles.themeBlack.value;
               },
               child: null,
               style: ElevatedButton.styleFrom(
