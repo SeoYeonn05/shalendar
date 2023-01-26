@@ -159,7 +159,7 @@ class _HomeState extends State<Home> {
                                 child: SizedBox(
                                     width: 200
                                 )),
-                            Text("${completeRate[calendar.calendarId]}%") /*${_homeProvider.completeTodoRate[calendar.calendarId]}*/
+                            Text("${completeRate[calendar.calendarId]?.toInt()}%") /*${_homeProvider.completeTodoRate[calendar.calendarId]}*/
                           ],
                         ),
                         Row(

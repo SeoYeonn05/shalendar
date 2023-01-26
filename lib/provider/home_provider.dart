@@ -132,7 +132,7 @@ class HomeProvider extends ChangeNotifier {
       for (var todo in todoList) {
         count++;
 
-        Todo res = Todo.fromJson(todo);
+        Todo res = todo;
 
         logger.d('todo: $res');
 
