@@ -8,6 +8,7 @@ import 'package:shalendar/data/todo.dart';
 import 'package:shalendar/screen/calendar_todo.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
+import '../controller/user_controller.dart';
 import '../data/calendar.dart';
 import '../utils/calendar_event.dart';
 import 'home.dart';
@@ -31,11 +32,13 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
   final titleController = TextEditingController();
   final descpController = TextEditingController();
   final todoController = Get.put(TodoController());
+  final userController = Get.put(UserController());
+
+  late int theme;
 
   @override
   void initState() {
     _fetchData();
-    // TODO: implement initState
     super.initState();
     _selectedDay = _focusedDay;
     _selectedEvents =
@@ -44,6 +47,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
 
   void _fetchData() async {
     bool result = await todoController.todoIndex(widget.calendar.calendarId!);
+    await todoController.loadTheme(widget.calendar.calendarId!);
   }
 
   /// 뒤로가기 버튼 눌렀을 때
@@ -51,6 +55,12 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
     Navigator.pop(context);
   }
 
+  /// 캘린더 세팅
+  void calendarSetting() {
+    print("캘린더 세팅 클릭");
+  }
+
+  /// 캘린더 해당 날짜로 들어갈 때
   void goCalendarTodo() {
     Navigator.push(
       context,
@@ -103,71 +113,116 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
         centerTitle: true,
         backgroundColor: Color(0xff676767),
         leading: IconButton(
-            onPressed: backButton,
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            )),
+          onPressed: backButton,
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: calendarSetting,
+            icon: Icon(Icons.settings),
+          ),
+        ],
       ),
       body: GetBuilder<TodoController>(builder: (c) {
-        return Column(
-          children: [
-            TableCalendar<Event>(
-              firstDay: kFirstDay,
-              lastDay: kLastDay,
-              focusedDay: _focusedDay,
-              selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-              calendarFormat: _calendarFormat,
-              eventLoader: (day) => _getEventsForDay(day, c.todoList),
-              startingDayOfWeek: StartingDayOfWeek.monday,
-              calendarStyle: CalendarStyle(
-                // Use `CalendarStyle` to customize the UI
-                outsideDaysVisible: false,
+        return Container(
+          color: Color(0xff3E3E3E),
+          child: Column(
+            children: [
+              Container(
+                margin: EdgeInsets.all(8),
+                child: TableCalendar<Event>(
+                  firstDay: kFirstDay,
+                  lastDay: kLastDay,
+                  focusedDay: _focusedDay,
+                  selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                  calendarFormat: _calendarFormat,
+                  eventLoader: (day) => _getEventsForDay(day, c.todoList),
+                  startingDayOfWeek: StartingDayOfWeek.monday,
+                  calendarStyle: CalendarStyle(
+                    rowDecoration: BoxDecoration(color: Color(0xff555555)),
+                    weekendTextStyle:
+                        TextStyle(color: Color.fromARGB(255, 255, 129, 120)),
+                    isTodayHighlighted: true,
+                    outsideDaysVisible: true,
+                    defaultTextStyle: TextStyle(color: Colors.white),
+                    markerDecoration: BoxDecoration(color: Color(c.theme)),
+                    tableBorder: TableBorder(
+                      top: BorderSide(color: Color(0xffD9D9D9)),
+                      horizontalInside: BorderSide(color: Color(0xffD9D9D9)),
+                      verticalInside: BorderSide(color: Color(0xffD9D9D9)),
+                    ),
+                  ),
+                  headerStyle: HeaderStyle(
+                    decoration: BoxDecoration(color: Color(0xff555555)),
+                    formatButtonVisible: false,
+                    titleTextStyle:
+                        TextStyle(color: Colors.white, fontSize: 18),
+                    leftChevronIcon: Icon(
+                      Icons.chevron_left,
+                      color: Colors.white,
+                    ),
+                    rightChevronIcon: Icon(
+                      Icons.chevron_right,
+                      color: Colors.white,
+                    ),
+                  ),
+                  daysOfWeekStyle: DaysOfWeekStyle(
+                    decoration: BoxDecoration(color: Color(0xff555555)),
+                    weekdayStyle: TextStyle(color: Colors.white),
+                    weekendStyle:
+                        TextStyle(color: Color.fromARGB(255, 255, 129, 120)),
+                  ),
+                  onDaySelected: _onDaySelected,
+                  onFormatChanged: (format) {
+                    if (_calendarFormat != format) {
+                      setState(() {
+                        _calendarFormat = format;
+                      });
+                    }
+                  },
+                  onPageChanged: (focusedDay) {
+                    _focusedDay = focusedDay;
+                  },
+                ),
               ),
-              onDaySelected: _onDaySelected,
-              onFormatChanged: (format) {
-                if (_calendarFormat != format) {
-                  setState(() {
-                    _calendarFormat = format;
-                  });
-                }
-              },
-              onPageChanged: (focusedDay) {
-                _focusedDay = focusedDay;
-              },
-            ),
-            const SizedBox(height: 8.0),
-            Expanded(
-              child: ValueListenableBuilder<List<Event>>(
-                valueListenable: _selectedEvents,
-                builder: (context, value, _) {
-                  return ListView.builder(
-                    itemCount: value.length,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 12.0,
-                          vertical: 4.0,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(),
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                        child: ListTile(
-                          onTap: () => print('${value[index]}'),
-                          title: Text('${value[index]}'),
-                        ),
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.all(8),
+                  color: Color(0xff555555),
+                  child: ValueListenableBuilder<List<Event>>(
+                    valueListenable: _selectedEvents,
+                    builder: (context, value, _) {
+                      return ListView.builder(
+                        itemCount: value.length,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              color: Color(0xff555555),
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            child: ListTile(
+                              onTap: () => print('${value[index]}'),
+                              title: Text(
+                                '${value[index]}',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          );
+                        },
                       );
                     },
-                  );
-                },
+                  ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       }),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xff676767),
+        backgroundColor: Color(0xff848484),
         onPressed: goCalendarTodo,
         child: const Icon(
           Icons.keyboard_arrow_right,
