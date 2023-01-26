@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:shalendar/controller/todo_controller.dart';
 import 'package:shalendar/screen/calendar_todo.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
@@ -24,12 +26,20 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
 
   final titleController = TextEditingController();
   final descpController = TextEditingController();
+  final todoController = Get.put(TodoController());
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _selectedDate = _focusedDay;
+    _fetchData();
+    print(todoController.todoList);
+  }
+
+  void _fetchData() async {
+    bool result = await todoController.todoIndex(widget.calendar.calendarId!);
+    print("result : $result");
   }
 
   /// 뒤로가기 버튼 눌렀을 때
@@ -132,6 +142,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // backgroundColor: const Color(0xff3E3E3E),
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text('${widget.calendar.calendarName}'),
