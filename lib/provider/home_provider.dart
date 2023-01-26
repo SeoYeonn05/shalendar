@@ -34,7 +34,6 @@ class HomeProvider extends ChangeNotifier {
       /// 네비게이션 탭을 누르면, 해당 네비의 첫 스크린으로 이동
       _navigatorKeys[btmItem]!.currentState!.popUntil((route) => route.isFirst);
     } else{
-
     }
   }*/
 
@@ -57,12 +56,13 @@ class HomeProvider extends ChangeNotifier {
       // logger.d(founded.runtimeType);
 
       if (founded != null) {
-        logger.d('hi');
+        logger.d('home provider 실행');
         // User.fromJson(json.decode(response.body)) 형태로 사용
 
         founded = founded as List;
         for (var calendar in founded) {
           Map<String, dynamic> tmp = calendar;
+
           Calendar res = Calendar(
               calendarId: tmp['calendar_id'].toString(),
               calendarName: tmp['calendar_name'],
@@ -70,10 +70,10 @@ class HomeProvider extends ChangeNotifier {
               userConnId: tmp['user_conn_id']);
 
           calendarList?.add(res);
-          themeMap[tmp['calendar_id']] =
-              await userController.getTheme(tmp['calendar_id']);
-          // themeMap![tmp['calendar_id']] = Color(
-          //     int.parse(()));
+
+          themeMap[tmp['calendar_id']] = await userController.getTheme(tmp['calendar_id']);
+
+          logger.d(tmp["calendar_id"]);
         }
         state = HomeState.completed;
         notifyListeners();
@@ -83,7 +83,7 @@ class HomeProvider extends ChangeNotifier {
       }
       notifyListeners();
     } catch (e) {
-      logger.d(e);
+      //logger.d(e);
       return null;
     }
   }

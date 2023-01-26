@@ -19,7 +19,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  late BottomNavigationProvider _bottomNavigationProvider;
   late HomeProvider _homeProvider;
   late HomeState state;
   late UserController userController;
@@ -57,7 +56,6 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     _homeProvider = Provider.of<HomeProvider>(context);
-    _bottomNavigationProvider = Provider.of<BottomNavigationProvider>(context);
     state = _homeProvider.state;
 
     return Scaffold(
@@ -132,21 +130,42 @@ class _HomeState extends State<Home> {
                 ),*/
                 /// 테마에 따른 색상
                 Container(
-                    alignment: Alignment.bottomRight,
-                    padding: EdgeInsets.all(7),
+                    //alignment: Alignment.bottomRight,
+                    padding: EdgeInsets.all(10),
                     color: Color(
                         themeMap[int.parse(calendar.calendarId ?? '0')] ??
                             4294311867),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text("${calendar.calendarName!}  ",
                             style: const TextStyle(
                                 fontFamily: 'Pretendard',
-                                fontSize: 16,
+                                fontSize: 18,
                                 color: Colors.black,
                                 fontWeight: FontWeight.w600)),
-                        Text("achieveRate%"),
-                        Text("정서연 외 11명")
+                        const SizedBox(height: 10),
+                        Row(
+                          children: const [
+                            Flexible(
+                                fit: FlexFit.loose,
+                                child: SizedBox(
+                                    width: 200
+                                )),
+                            Text("84%") /*${_homeProvider.completeTodoRate[calendar.calendarId]}*/
+                          ],
+                        ),
+                        Row(
+                          children: const [
+                            Flexible(
+                                fit: FlexFit.loose,
+                                child: SizedBox(
+                                    width: 50
+                                )),
+                            Text("정서연 외 11명")
+                          ],
+                        )
                       ],
                     )),
               ]))));
