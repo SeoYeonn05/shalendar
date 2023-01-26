@@ -6,17 +6,17 @@ import 'package:shalendar/data/todo.dart';
 import 'package:shalendar/network/network_helper.dart';
 
 class TodoProvider extends ChangeNotifier {
-  late List<Todo>? todoList;
-  late Map<int, int> themeMap;
+  final List<Todo>? todoList = [];
+  final Map<int, int> themeMap = <int, int>{};
 
   var logger = Logger(printer: PrettyPrinter());
 
   Future getTodoListByUser() async {
     final NetworkHelper networkHelper = Get.put(NetworkHelper());
     final UserController userController = Get.put(UserController());
-    todoList = [];
-    themeMap = <int, int>{};
     try {
+      todoList?.clear();
+      themeMap.clear();
       String requestUrl = "users/todo";
       Map<String, String> headers = <String, String>{};
       headers['token'] = (await userController.getToken())!;

@@ -19,12 +19,17 @@ class _TodoScreenState extends State<TodoScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<TodoProvider>(context, listen: false).getTodoListByUser();
+    final tmp = Provider.of<TodoProvider>(context, listen: false);
+    tmp.getTodoListByUser();
+    print(tmp);
+    print(context);
   }
 
   @override
   Widget build(BuildContext context) {
+    print(context);
     _todoProvider = Provider.of<TodoProvider>(context);
+
     final todoList = _todoProvider.todoList;
     final themeMap = _todoProvider.themeMap;
     print(todoList);
@@ -98,23 +103,7 @@ class _TodoScreenState extends State<TodoScreen> {
               ),
               height: 60,
               child: Row(
-                children: [
-                  Text('1/12'),
-                  Text('할 일'),
-                  // SizedBox(
-                  //   width: 30,
-                  //   height: 30,
-
-                  //   child: InkWell(
-                  //     radius: 100,
-                  //     onTap: () {},
-                  //     child: Ink.image(
-                  //         image: (todo.isComplete!)
-                  //             ? AssetImage('assets/icons/ic_checked.png')
-                  //             : AssetImage('assets/icons/ic_crossed.png')),
-                  //   ),
-                  // )
-                ],
+                children: [],
               ),
             ),
           ])
@@ -129,3 +118,14 @@ class _TodoScreenState extends State<TodoScreen> {
     );
   }
 }
+
+//  SizedBox(
+//                     width: 30,
+//                     height: 30,
+//                     child: InkWell(
+//                         radius: 100,
+//                         onTap: () {},
+//                         child: (todo.isComplete!)
+//                             ? Image.asset('assets/icons/ic_checked.png')
+//                             : Image.asset('assets/icons/ic_crossed.png')),
+//                   )
