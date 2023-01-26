@@ -11,6 +11,7 @@ class TodoController extends GetxController {
   final userController = Get.put(UserController());
 
   List todoList = [];
+  List userList = [];
   String joinCode = "";
   int theme = int.parse(ColorStyles.themeYellow.value.toString());
 
@@ -39,6 +40,16 @@ class TodoController extends GetxController {
       return false;
     }
     joinCode = body['shareKey'];
+    update();
+    return true;
+  }
+
+  Future<bool> geCalendartUser(String calendarId) async {
+    Map? body = await todoRepo.geCalendartUser(calendarId);
+    if (body == null) {
+      return false;
+    }
+    userList = body['users'];
     update();
     return true;
   }

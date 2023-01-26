@@ -10,6 +10,7 @@ import '../data/ResponseUserPost.dart';
 import '../network/network_helper.dart';
 import '../theme/color.dart';
 import '../utils/snackbar.dart';
+import '../widget/calendarUser.dart';
 
 String color = "";
 String joinCode = "";
@@ -21,13 +22,13 @@ void joinCodeCopy(BuildContext context, String code) async {
   return;
 }
 
-// 캘린더 추가 다이얼로그에서 ok 클릭 시
+/// 캘린더 추가 다이얼로그에서 ok 클릭 시
 void settingComplete(BuildContext context, Calendar calendar) async {
   final userController = Get.put(UserController());
   final todoController = Get.put(TodoController());
 
+  // 로컬에 테마 저장
   userController.setTheme(int.parse(calendar.calendarId!), color);
-  print("setTheme 로컬에 저장 key : ${calendar.calendarId!}, value : $color");
   todoController.loadTheme(calendar.calendarId!); // 즉시 반영
 }
 
@@ -35,8 +36,13 @@ void settingComplete(BuildContext context, Calendar calendar) async {
 void calendarSettingDialog(BuildContext context, Calendar calendar) async {
   final todoController = Get.put(TodoController());
   final userController = Get.put(UserController());
-  bool result = await todoController.getJoinCode(calendar.calendarId!);
+
+  // 참가 코드 불러오기
+  await todoController.getJoinCode(calendar.calendarId!);
+  // 저장된 테마색 불러오기
   color = await userController.getTheme(int.parse(calendar.calendarId!));
+  // 캘린더에 참여하고 있는 유저 목록 불러오기
+  bool result = await todoController.geCalendartUser(calendar.calendarId!);
 
   if (todoController.joinCode == null) {
     return;
@@ -48,10 +54,12 @@ void calendarSettingDialog(BuildContext context, Calendar calendar) async {
       context: context,
       builder: (context) {
         return AlertDialog(
+          scrollable: true,
           content: Container(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 SizedBox(
                   child: Text(
@@ -121,6 +129,25 @@ void calendarSettingDialog(BuildContext context, Calendar calendar) async {
                 ),
                 SizedBox(height: 15),
                 ThemeButton(),
+                SizedBox(height: 15),
+                SizedBox(
+                  child: Text(
+                    "참가 인원",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  width: double.infinity,
+                ),
+                SizedBox(height: 15),
+                Container(
+                  width: 300,
+                  height: 150,
+                  child: ListView.separated(
+                    itemBuilder: (context, index) => CalendarUsers(
+                        todoController.userList[index]['user_name']),
+                    separatorBuilder: (context, index) => Divider(),
+                    itemCount: todoController.userList.length,
+                  ),
+                )
               ],
             ),
           ),
