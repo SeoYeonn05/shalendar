@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shalendar/provider/home_provider.dart';
+import 'package:shalendar/widget/themeButton.dart';
 
 import '../controller/user_controller.dart';
 import '../data/ResponseUserPost.dart';
@@ -89,7 +90,7 @@ void addCalendarDialog(BuildContext context, HomeProvider _homeProvider) async {
                     color: Colors.white,
                     fontSize: 15,
                   ),
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelStyle: TextStyle(
                       fontSize: 15,
                       color: Colors.white,
@@ -102,20 +103,20 @@ void addCalendarDialog(BuildContext context, HomeProvider _homeProvider) async {
                     ),
                   ),
                 ),
-                SizedBox(height: 15),
-                SizedBox(
+                const SizedBox(height: 15),
+                const SizedBox(
+                  width: double.infinity,
                   child: Text(
                     "테마 설정",
                     style: TextStyle(color: Colors.white),
                   ),
-                  width: double.infinity,
                 ),
-                SizedBox(height: 15),
+                const SizedBox(height: 15),
                 ThemeButton(),
               ],
             ),
           ),
-          backgroundColor: Color(0xff3E3E3E),
+          backgroundColor: ColorStyles.backgroundColor,
           actions: [
             Center(
               child: Row(
@@ -123,7 +124,7 @@ void addCalendarDialog(BuildContext context, HomeProvider _homeProvider) async {
                 children: [
                   TextButton(
                     onPressed: () => Navigator.pop(context, 'Cancel'),
-                    child: Text(
+                    child: const Text(
                       'Cancel',
                       style: TextStyle(
                         color: Colors.white,
@@ -131,13 +132,13 @@ void addCalendarDialog(BuildContext context, HomeProvider _homeProvider) async {
                       ),
                     ),
                   ),
-                  SizedBox(width: 30),
+                  const SizedBox(width: 30),
                   TextButton(
                     onPressed: () {
                       addCalendar(context, _textController.text, _homeProvider);
                       Navigator.pop(context, 'OK');
                     },
-                    child: Text(
+                    child: const Text(
                       'OK',
                       style: TextStyle(
                         color: Colors.white,
@@ -166,12 +167,12 @@ void joinCalendarDialog(
               mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(
+                const SizedBox(
+                  width: double.infinity,
                   child: Text(
                     "참가코드 입력",
                     style: TextStyle(color: Colors.white),
                   ),
-                  width: double.infinity,
                 ),
                 TextField(
                   controller: _textController,
@@ -181,7 +182,7 @@ void joinCalendarDialog(
                     color: Colors.white,
                     fontSize: 15,
                   ),
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelStyle: TextStyle(
                       fontSize: 15,
                       color: Colors.white,
@@ -195,19 +196,19 @@ void joinCalendarDialog(
                   ),
                 ),
                 SizedBox(height: 15),
-                SizedBox(
+                const SizedBox(
+                  width: double.infinity,
                   child: Text(
                     "테마 설정",
                     style: TextStyle(color: Colors.white),
                   ),
-                  width: double.infinity,
                 ),
-                SizedBox(height: 15),
+                const SizedBox(height: 15),
                 ThemeButton(),
               ],
             ),
           ),
-          backgroundColor: Color(0xff3E3E3E),
+          backgroundColor: ColorStyles.backgroundColor,
           actions: [
             Center(
               child: Row(
@@ -215,7 +216,7 @@ void joinCalendarDialog(
                 children: [
                   TextButton(
                     onPressed: () => Navigator.pop(context, 'Cancel'),
-                    child: Text(
+                    child: const Text(
                       'Cancel',
                       style: TextStyle(
                         color: Colors.white,
@@ -230,7 +231,7 @@ void joinCalendarDialog(
                           context, _textController.text, _homeProvider);
                       Navigator.pop(context, 'OK');
                     },
-                    child: Text(
+                    child: const Text(
                       'OK',
                       style: TextStyle(
                         color: Colors.white,
@@ -244,129 +245,4 @@ void joinCalendarDialog(
           ],
         );
       });
-}
-
-class ThemeButton extends StatelessWidget {
-  ThemeButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
-          child: SizedBox(
-            height: 28,
-            width: 28,
-            child: ElevatedButton(
-              onPressed: () {
-                color = ColorStyles.themeYellow.value;
-              },
-              child: null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: ColorStyles.themeYellow,
-              ),
-            ),
-          ),
-        ),
-        Container(
-          margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
-          child: SizedBox(
-            height: 28,
-            width: 28,
-            child: ElevatedButton(
-              onPressed: () {
-                color = ColorStyles.themeRed.value;
-              },
-              child: null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: ColorStyles.themeRed,
-              ),
-            ),
-          ),
-        ),
-        Container(
-          margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
-          child: SizedBox(
-            height: 28,
-            width: 28,
-            child: ElevatedButton(
-              onPressed: () {
-                color = ColorStyles.themePink.value;
-              },
-              child: null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: ColorStyles.themePink,
-              ),
-            ),
-          ),
-        ),
-        Container(
-          margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
-          child: SizedBox(
-            height: 28,
-            width: 28,
-            child: ElevatedButton(
-              onPressed: () {
-                color = ColorStyles.themeOrange.value;
-              },
-              child: null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: ColorStyles.themeOrange,
-              ),
-            ),
-          ),
-        ),
-        Container(
-          margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
-          child: SizedBox(
-            height: 28,
-            width: 28,
-            child: ElevatedButton(
-              onPressed: () {
-                color = ColorStyles.themeGreen.value;
-              },
-              child: null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: ColorStyles.themeGreen,
-              ),
-            ),
-          ),
-        ),
-        Container(
-          margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
-          child: SizedBox(
-            height: 28,
-            width: 28,
-            child: ElevatedButton(
-              onPressed: () {
-                color = ColorStyles.themeBlue.value;
-              },
-              child: null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: ColorStyles.themeBlue,
-              ),
-            ),
-          ),
-        ),
-        Container(
-          margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
-          child: SizedBox(
-            height: 28,
-            width: 28,
-            child: ElevatedButton(
-              onPressed: () {
-                color = ColorStyles.themeBlack.value;
-              },
-              child: null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: ColorStyles.themeBlack,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 }
